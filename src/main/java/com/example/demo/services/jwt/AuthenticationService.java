@@ -65,20 +65,22 @@ public class AuthenticationService {
      */
     public JwtAuthenticationResponse signIn(SignInRequest request) {
         try {
+
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            request.getEmail().toLowerCase(),
+                            request.getUsername().toLowerCase(),
                             request.getPassword()
                     ));
 
-            var user = userService.getUserByEmail(request.getEmail().toLowerCase());
+            var user = userService.getUserByUsername(request
+                    .getUsername().toLowerCase());
 
             var jwt = jwtService.generateToken(user);
 
             return new JwtAuthenticationResponse(jwt);
         } catch (AuthenticationException ex) {
-            // Handle authentication exception
-            throw new AuthException("Authentication failed: " + ex.getMessage());
+            throw new AuthException("Ошибка аутентификации пользователя: "
+                    + ex.getMessage());
         }
     }
 

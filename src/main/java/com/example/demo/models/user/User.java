@@ -1,13 +1,8 @@
 package com.example.demo.models.user;
 
-import com.example.demo.models.comment.Comment;
-import com.example.demo.models.task.Task;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,7 +25,10 @@ import java.util.List;
 @Entity
 @Builder
 @Table(name = "users")
-@Data
+@EqualsAndHashCode
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements UserDetails {
@@ -40,6 +38,8 @@ public class User implements UserDetails {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @Column(name = "id")
     private Long id;
 
@@ -101,26 +101,6 @@ public class User implements UserDetails {
     private Long version = 1L;
 
     /**
-     * Список задач, созданных пользователем.
-     */
-    @OneToMany(mappedBy = "author")
-    private List<Task> authoredTasks;
-
-    /**
-     * Список задач, в которых пользователь является исполнителем.
-     */
-    @ManyToMany(mappedBy = "executors")
-    private List<Task> tasks;
-
-    /**
-     * Список комментариев, оставленных пользователем.
-     * Комментарии каскадно удаляются при удалении пользователя.
-     */
-    @OneToMany(mappedBy = "user",
-            cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments;
-
-    /**
      * Возвращает список ролей (прав доступа) пользователя для интеграции с Spring Security.
      *
      * @return коллекция с единственной ролью пользователя
@@ -129,31 +109,6 @@ public class User implements UserDetails {
         SimpleGrantedAuthority grantedAuthority =
                 new SimpleGrantedAuthority(role.name());
         return List.of(grantedAuthority);
-    }
-
-    /**
-     * Переопределение метода equals для сравнения пользователей по идентификатору.
-     *
-     * @param o объект для сравнения
-     * @return {@code true}, если объекты равны; {@code false} в противном случае
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (!(o instanceof User)) return false;
-        return id != null && id.equals(((User) o).getId());
-    }
-
-    /**
-     * Переопределение метода hashCode для генерации хэш-кода
-     * на основе идентификатора.
-     *
-     * @return хэш-код объекта
-     */
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
     }
 
     /**
