@@ -7,9 +7,8 @@ import org.mapstruct.Mapping;
 
 /**
  * Маппер для преобразования между сущностями User и UserDto.
- * Используется для упрощения преобразования данных между слоями приложения.
  */
-@Mapper(componentModel = "spring", uses = TaskMapper.class)
+@Mapper(componentModel = "spring")
 public abstract class UserMapper {
 
     /**
@@ -18,7 +17,6 @@ public abstract class UserMapper {
      * @param user сущность User
      * @return объект UserDto
      */
-    @Mapping(source = "tasks", target = "tasks")
     public abstract UserDto userToUserDto(User user);
 
     /**
@@ -29,13 +27,9 @@ public abstract class UserMapper {
      */
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "role", ignore = true)
-    @Mapping(target = "priority", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "version", ignore = true)
-    @Mapping(target = "authoredTasks", ignore = true)
-    @Mapping(target = "comments", ignore = true)
-    @Mapping(source = "tasks", target = "tasks")
     public abstract User userDtoToUser(UserDto userDto);
 
 }

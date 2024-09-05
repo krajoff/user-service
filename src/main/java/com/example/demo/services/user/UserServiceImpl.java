@@ -1,6 +1,7 @@
 package com.example.demo.services.user;
 
 import com.example.demo.exceptions.ResourceNotFoundException;
+import com.example.demo.exceptions.UserAlreadyExistedException;
 import com.example.demo.models.user.Role;
 import com.example.demo.models.user.User;
 import com.example.demo.repositories.user.UserRepository;
@@ -32,7 +33,7 @@ public class UserServiceImpl implements
     public User getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException
-                        ("User with id " + id + " not found"));
+                        ("Пользователь с id = " + id + " не найден"));
     }
 
     /**
@@ -54,7 +55,7 @@ public class UserServiceImpl implements
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException
-                        ("User with email " + email + " not found"));
+                        ("Пользователь с электронной почтой " + email + " не найден"));
     }
 
     /**
@@ -66,7 +67,9 @@ public class UserServiceImpl implements
     public User createUser(User user) {
         if (!userRepository.findByUsernameOrEmail
                 (user.getUsername(), user.getEmail()).isEmpty()) {
-            throw new RuntimeException("User already existed");
+            throw new UserAlreadyExistedException(
+                    "Пользователь с таким логином или " +
+                            "электронной почтой уже существует");
         }
         return saveUser(user);
     }
@@ -151,19 +154,17 @@ public class UserServiceImpl implements
     }
 
     /**
-     * Загружает данные пользователя по адресу электронной почты.
+     * Загружает данные пользователя по username.
      *
-     * @param email адрес электронной почты пользователя.
+     * @param username адрес электронной почты пользователя.
      * @return UserDetails пользователя.
      */
     @Override
-    public UserDetails loadUserByUsername(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException
-                        ("User with email " + email + " not found"));
+    public UserDetails loadUserByUsername(String username) {
+        User user = userRepository.findByUsername(username);
 
         return User.builder()
-                .username(user.getEmail())
+                .username(user.getUsername())
                 .password(user.getPassword())
                 .role(Role.USER)
                 .build();

@@ -74,7 +74,7 @@ public class JwtService {
         Map<String, Object> claims = new HashMap<>();
         if (userDetails instanceof User customUserDetails) {
             claims.put("id", customUserDetails.getId());
-            claims.put("email", customUserDetails.getEmail());
+            claims.put("username", customUserDetails.getUsername());
             claims.put("role", customUserDetails.getRole());
         }
         return generateToken(claims, userDetails);
@@ -107,8 +107,8 @@ public class JwtService {
      * @return true, если токен действителен
      */
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String userName = extractUsername(token);
-        return (userName.equals(userDetails.getUsername()))
+        final String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername()))
                 && !isTokenExpired(token);
     }
 

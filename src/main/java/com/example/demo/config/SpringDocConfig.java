@@ -41,11 +41,10 @@ public class SpringDocConfig {
      * @return объект OpenAPI с настраиваемой информацией
      */
     @Bean
-    public OpenAPI customOpenApi(@Value("A system for managing and tracking tasks")
+    public OpenAPI customOpenApi(@Value("A system for managing users information")
                                  String appDescription,
                                  @Value("0.0.1") String appVersion) {
-        return new OpenAPI().info(new Info().title("Managing and tracking tasks " +
-                                "application")
+        return new OpenAPI().info(new Info().title("Managing users application")
                         .version(appVersion)
                         .description(appDescription)
                         .license(new License().name("Apache 2.0")

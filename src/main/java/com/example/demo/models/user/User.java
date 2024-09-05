@@ -2,6 +2,7 @@ package com.example.demo.models.user;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -9,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +24,7 @@ import java.util.List;
  * Реализует интерфейс {@link UserDetails} для интеграции с Spring Security.
  * </p>
  */
-@Entity
+@Entity(name = "User")
 @Builder
 @Table(name = "users")
 @EqualsAndHashCode
@@ -43,17 +45,45 @@ public class User implements UserDetails {
     @Column(name = "id")
     private Long id;
 
+    /**
+     * Имя пользователя.
+     */
+    @Column(name = "firstname")
+    @Size(max = 255)
+    private String firstname;
 
     /**
-     * Имя пользователя. Поле обязательно для заполнения и должно быть уникальным.
+     * Фамилия пользователя.
+     */
+    @Column(name = "surname")
+    @Size(max = 255)
+    private String surname;
+
+    /**
+     * Отчество пользователя.
+     */
+    @Column(name = "patronymic")
+    @Size(max = 255)
+    private String patronymic;
+
+    /**
+     * Дата рождения пользователя.
+     */
+    @Column(name = "birth_date")
+    private LocalDate birthDate;
+
+    /**
+     * Логин пользователя. Поле обязательно для заполнения и должно быть уникальным.
      */
     @Column(name = "username", unique = true, nullable = false)
+    @Size(max = 255)
     private String username;
 
     /**
      * Пароль пользователя. Поле обязательно для заполнения.
      */
     @Column(name = "password", nullable = false)
+    @Size(max = 255)
     private String password;
 
     /**
@@ -68,13 +98,15 @@ public class User implements UserDetails {
      */
     @Email
     @Column(name = "email", unique = true)
+    @Size(max = 255)
     private String email;
 
     /**
-     * Приоритет пользователя. Поле может быть пустым.
+     * Путь к фотографии пользователя.
      */
-    @Column(name = "priority")
-    private Integer priority;
+    @Column(name="photo")
+    @Size(max = 255)
+    private String photo;
 
     /**
      * Дата создания пользователя. Поле автоматически заполняется

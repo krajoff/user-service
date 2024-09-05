@@ -1,13 +1,12 @@
 package com.example.demo.requests;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 /**
- * DTO для запросов на регистрацию пользователя.
+ * DTO для запросов на аутентификацию пользователя.
  * <p>
  * Этот класс инкапсулирует данные, необходимые пользователю для авторизации.
  * Он включает ограничения проверки, чтобы убедиться, что предоставленные

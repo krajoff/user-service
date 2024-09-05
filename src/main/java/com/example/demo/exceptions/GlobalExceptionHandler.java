@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler
     public ResponseEntity<AppError> catchResourceNotFoundException
-            (ResourceNotFoundException e) {
+    (ResourceNotFoundException e) {
         return new ResponseEntity<>(
                 new AppError(HttpStatus.NOT_FOUND.value(),
                         e.getMessage()), HttpStatus.NOT_FOUND);
@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler
     public ResponseEntity<AppError> catchAuthException
-            (AuthException e) {
+    (AuthException e) {
         return new ResponseEntity<>(
                 new AppError(HttpStatus.UNAUTHORIZED.value(),
                         e.getMessage()), HttpStatus.UNAUTHORIZED);
@@ -59,7 +59,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler
     public ResponseEntity<AppError> catchJwtAuthException
-            (JwtAuthException e) {
+    (JwtAuthException e) {
         return new ResponseEntity<>(
                 new AppError(HttpStatus.UNAUTHORIZED.value(),
                         e.getMessage()), HttpStatus.UNAUTHORIZED);
@@ -75,7 +75,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler
     public ResponseEntity<AppError> catchJwtExpiredException
-            (JwtExpiredException e) {
+    (JwtExpiredException e) {
         return new ResponseEntity<>(
                 new AppError(HttpStatus.UNAUTHORIZED.value(),
                         e.getMessage()), HttpStatus.UNAUTHORIZED);
@@ -90,11 +90,25 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler
     public ResponseEntity<AppError> catchUserNotFoundException
-            (UsernameNotFoundException e) {
+    (UsernameNotFoundException e) {
         return new ResponseEntity<>(
                 new AppError(HttpStatus.NOT_FOUND.value(),
                         e.getMessage()), HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Обрабатывает исключение {@link UserAlreadyExistedException},
+     * которое возникает, если пользователь уже существует.
+     *
+     * @param e исключение {@link UserAlreadyExistedException}
+     * @return ответ с кодом BAD_REQUEST и сообщением об ошибке
+     */
+    @ExceptionHandler
+    public ResponseEntity<AppError> UserAlreadyExistedException
+    (UserAlreadyExistedException e) {
+        return new ResponseEntity<>(
+                new AppError(HttpStatus.BAD_REQUEST.value(),
+                        e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
 
 }

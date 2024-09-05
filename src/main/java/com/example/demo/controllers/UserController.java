@@ -16,19 +16,20 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * Контроллер, предоставляющий API для управления пользователями.
- * <p>
  * Этот контроллер предоставляет методы для получения, обновления и удаления
  * информации о текущем пользователе.
- * </p>
  */
 @Tag(name = "User", description = "The Users API")
-@RestController
 @RequestMapping("/api/v1/user")
+@RestController
 public class UserController {
+
     @Autowired
     private UserService userService;
+
     @Autowired
     private UserMapper userMapper;
+
     @Autowired
     private AuthService authService;
 
@@ -55,6 +56,7 @@ public class UserController {
     public UserDto updateUser(@RequestBody UserDto userDto) {
         User user = authService.getCurrentUser();
         user.setEmail(userDto.getEmail());
+
         userService.updateUser(user.getId(), user);
         return userDto;
     }
