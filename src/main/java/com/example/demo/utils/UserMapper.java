@@ -1,12 +1,13 @@
 package com.example.demo.utils;
 
+import com.example.demo.dtos.DetailedUserDto;
 import com.example.demo.dtos.UserDto;
 import com.example.demo.models.user.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 /**
- * Маппер для преобразования между сущностями User и UserDto.
+ * Маппер для преобразования между сущностями User, UserDto DetailedUserDto.
  */
 @Mapper(componentModel = "spring")
 public abstract class UserMapper {
@@ -31,5 +32,26 @@ public abstract class UserMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "version", ignore = true)
     public abstract User userDtoToUser(UserDto userDto);
+
+
+    /**
+     * Преобразует сущность User в DetailedUserDto.
+     *
+     * @param user сущность User
+     * @return объект DetailedUserDto
+     */
+    public abstract DetailedUserDto userToDetailedUserDto(User user);
+
+    /**
+     * Преобразует сущность User в DetailedUserDto.
+     *
+     * @param DetailedUserDto сущность UserDto
+     * @return объект User
+     */
+    @Mapping(target = "role", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "version", ignore = true)
+    public abstract User detailedUserDtoToUser(DetailedUserDto DetailedUserDto);
 
 }

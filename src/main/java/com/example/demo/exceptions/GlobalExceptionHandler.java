@@ -111,4 +111,20 @@ public class GlobalExceptionHandler {
                         e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Обрабатывает исключение {@link PermissionException},
+     * которое возникает, если доступ закрыт.
+     *
+     * @param e исключение {@link PermissionException}
+     * @return ответ с кодом FORBIDDEN и сообщением об ошибке
+     */
+    @ExceptionHandler
+    public ResponseEntity<AppError> PermissionException
+    (PermissionException e) {
+        return new ResponseEntity<>(
+                new AppError(HttpStatus.FORBIDDEN.value(),
+                        e.getMessage()), HttpStatus.FORBIDDEN);
+    }
+
+
 }

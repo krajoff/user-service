@@ -1,23 +1,18 @@
 package com.example.demo.dtos;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.time.LocalDate;
-
-import lombok.*;
-
 import java.util.Date;
-
-/**
- * DTO (Data Transfer Object) для передачи данных о пользователе.
- * Содержит основную информацию о пользователе, используемую для
- * обмена данными между слоями приложения.
- */
 @Setter
 @Getter
 @ToString
 @EqualsAndHashCode
-@Schema(description = "DTO для пользователя")
-public class UserDto {
+public class DetailedUserDto {
 
     @Schema(description = "Уникальный идентификатор пользователя", example = "1")
     private Long id;
@@ -34,6 +29,9 @@ public class UserDto {
     @Schema(description = "Дата рождения пользователя", example = "5.5.1985")
     private LocalDate birthDate;
 
+    @Schema(description = "Пароль пользователя")
+    private String password;
+
     @Schema(description = "Номер телефона пользователя", example = "+79213109999")
     private String phoneNumber;
 
@@ -46,11 +44,5 @@ public class UserDto {
 
     @Schema(description = "Путь к фотографии пользователя")
     private String photo;
-
-    @Schema(description = "Дата создания пользователя")
-    private Date createdAt;
-
-    @Schema(description = "Дата последнего обновления пользователя")
-    private Date updatedAt;
 
 }

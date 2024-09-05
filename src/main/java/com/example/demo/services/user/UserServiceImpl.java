@@ -5,10 +5,11 @@ import com.example.demo.exceptions.UserAlreadyExistedException;
 import com.example.demo.models.user.Role;
 import com.example.demo.models.user.User;
 import com.example.demo.repositories.user.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -20,8 +21,14 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements
         UserService, UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(UserRepository userRepository,
+                           @Lazy PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     /**
      * Получает пользователя по его уникальному идентификатору.
@@ -51,7 +58,7 @@ public class UserServiceImpl implements
      *
      * @param email адрес электронной почты пользователя.
      * @return пользователь с указанным адресом электронной почты.
-      */
+     */
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException
@@ -83,13 +90,25 @@ public class UserServiceImpl implements
      */
     public User updateUser(Long id, User user) {
         User existingUser = getUserById(id);
-        existingUser.setEmail(user.getEmail());
-        existingUser.setPassword(user.getPassword());
-        return existingUser;
+        if (user.getFirstname() != null)
+            existingUser.setFirstname(user.getFirstname());
+        if (user.getSurname() != null)
+            existingUser.setSurname(user.getSurname());
+        if (user.getPatronymic() != null)
+            existingUser.setPatronymic(user.getPatronymic());
+        if (user.getPhoneNumber() != null)
+            existingUser.setPhoneNumber(user.getPhoneNumber());
+        if (user.getBirthDate() != null)
+            existingUser.setBirthDate(user.getBirthDate());
+        if (user.getPhoto() != null)
+            existingUser.setPhoto(user.getPhoto());
+        if (user.getPassword() != null)
+            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        return saveUser(existingUser);
     }
 
     /**
-     * Обновляет существующего пользователя по имени.
+     * Обновляет существующего пользователя по логину.
      *
      * @param username имя пользователя для обновления.
      * @param user     сущность пользователя с информацией об обновлении.
@@ -97,8 +116,7 @@ public class UserServiceImpl implements
      */
     public User updateByUsername(String username, User user) {
         User existingUser = getUserByUsername(username);
-        existingUser.setEmail(user.getEmail());
-        existingUser.setPassword(user.getPassword());
+        updateUser(existingUser.getId(), user);
         return existingUser;
     }
 

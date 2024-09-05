@@ -86,7 +86,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        // Обрезаем получаем имя пользователя из токена
+        // Обрезаем, получаем имя пользователя из токена
         final String username = jwtService.extractUsername(jwt);
         if (StringUtils.isNotEmpty(username)
                 && SecurityContextHolder

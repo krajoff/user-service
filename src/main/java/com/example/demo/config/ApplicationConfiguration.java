@@ -15,13 +15,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  */
 @Configuration
 public class ApplicationConfiguration {
+
     private final UserService userService;
 
     /**
      * Конструктор сущности ApplicationConfiguration
      *
      * @param userService сервис для работы с пользователями, предоставляющий
-     *                    данные пользователя по электронной почте
+     *                    данные пользователя по логину
      */
     public ApplicationConfiguration(UserService userService) {
         this.userService = userService;

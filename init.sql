@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS users (
 INSERT INTO users (firstname, surname, patronymic,
 email, username, phone_number, birth_date, password)
 VALUES
+('Andrey', 'Vorobyev', 'Andreevich', 'andrey.vorobyev@example.com', 'vorobyev_aa', '+79991234567', '1993-06-25', '$2a$12$SQ./CdZ8r.pV3WmPSjv3x.44//hq5/RM9eRxbULA4daANkit0jOrK');
 ('Ivan', 'Ivanov', 'Sergeevich', 'ivan.ivanov@example.com', 'ivanov_is', '+79101234567', '1985-02-14', '$2a$12$SQ./CdZ8r.pV3WmPSjv3x.44//hq5/RM9eRxbULA4daANkit0jOrK'),
 ('Petr', 'Petrov', 'Petrovich', 'petr.petrov@example.com', 'petrov_pp', '+79261234567', '1990-05-21', '$2a$12$SQ./CdZ8r.pV3WmPSjv3x.44//hq5/RM9eRxbULA4daANkit0jOrK'),
 ('Sergey', 'Sergeev', 'Ivanovich', 'sergey.sergeev@example.com', 'sergeev_si', '+79371234567', '1988-08-10', '$2a$12$SQ./CdZ8r.pV3WmPSjv3x.44//hq5/RM9eRxbULA4daANkit0jOrK'),
@@ -30,3 +31,8 @@ VALUES
 ('Dmitry', 'Zaitsev', 'Igorevich', 'dmitry.zaitsev@example.com', 'zaitsev_di', '+79871234567', '1991-04-22', '$2a$12$SQ./CdZ8r.pV3WmPSjv3x.44//hq5/RM9eRxbULA4daANkit0jOrK'),
 ('Ekaterina', 'Smirnova', 'Vladimirovna', 'ekaterina.smirnova@example.com', 'smirnova_ev', '+79751234567', '1989-11-17', '$2a$12$SQ./CdZ8r.pV3WmPSjv3x.44//hq5/RM9eRxbULA4daANkit0jOrK'),
 ('Andrey', 'Vorobyev', 'Andreevich', 'andrey.vorobyev@example.com', 'vorobyev_aa', '+79991234567', '1993-06-25', '$2a$12$SQ./CdZ8r.pV3WmPSjv3x.44//hq5/RM9eRxbULA4daANkit0jOrK');
+
+INSERT INTO users (email, username, role, password)
+VALUES
+('admin', 'admin', 'ADMIN', '$2a$12$UOLfDL9DUHZU3TFYcAc9NONr.IGtQkm3fJXI3N/xWlvrGJQND2uju');
+

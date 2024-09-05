@@ -15,14 +15,15 @@ import org.springframework.web.bind.annotation.*;
 
 
 /**
- * Контроллер, предоставляющий API для управления пользователями.
+ * Контроллер, предоставляющий API для управления информацией пользователя.
  * Этот контроллер предоставляет методы для получения, обновления и удаления
  * информации о текущем пользователе.
  */
-@Tag(name = "User", description = "The Users API")
+@Tag(name = "Профиль пользователя",
+        description = "API для работы пользователя со своими данными")
 @RequestMapping("/api/v1/user")
 @RestController
-public class UserController {
+public class ProfileController {
 
     @Autowired
     private UserService userService;
@@ -39,7 +40,7 @@ public class UserController {
      * @return DTO с информацией о текущем пользователе
      */
     @GetMapping()
-    @Operation(summary = "Get a current user information")
+    @Operation(summary = "Получение информации пользователя о самом себе")
     public UserDto getUser() {
         User user = authService.getCurrentUser();
         return userMapper.userToUserDto(user);
@@ -52,13 +53,11 @@ public class UserController {
      * @return обновленная информация о пользователе в виде DTO
      */
     @PutMapping()
-    @Operation(summary = "Update a current user information")
+    @Operation(summary = "Обновление информации пользователя о самом себе")
     public UserDto updateUser(@RequestBody UserDto userDto) {
         User user = authService.getCurrentUser();
-        user.setEmail(userDto.getEmail());
-
-        userService.updateUser(user.getId(), user);
-        return userDto;
+        userService.updateUser(user.getId(), userMapper.userDtoToUser(userDto));
+        return getUser();
     }
 
     /**
@@ -68,7 +67,7 @@ public class UserController {
      * или NOT_FOUND при возникновении ошибки
      */
     @DeleteMapping()
-    @Operation(summary = "Delete a current user")
+    @Operation(summary = "Удалить аккаунт")
     public ResponseEntity<?> deleteUser() {
         try {
             User user = authService.getCurrentUser();

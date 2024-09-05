@@ -2,8 +2,10 @@ package com.example.demo.models.user;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -73,6 +75,13 @@ public class User implements UserDetails {
     private LocalDate birthDate;
 
     /**
+     * Номер телефона пользователя.
+     */
+    @Column(name = "phone_number")
+    @Pattern(regexp = "^\\+?[0-9]*$", message = "Только + и цифры")
+    private String phoneNumber;
+
+    /**
      * Логин пользователя. Поле обязательно для заполнения и должно быть уникальным.
      */
     @Column(name = "username", unique = true, nullable = false)
@@ -104,7 +113,7 @@ public class User implements UserDetails {
     /**
      * Путь к фотографии пользователя.
      */
-    @Column(name="photo")
+    @Column(name = "photo")
     @Size(max = 255)
     private String photo;
 
