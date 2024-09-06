@@ -5,6 +5,7 @@ import com.example.demo.exceptions.UserAlreadyExistedException;
 import com.example.demo.models.user.User;
 import com.example.demo.repositories.user.UserRepository;
 import com.example.demo.services.user.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -122,6 +123,7 @@ public class UserProfileService implements
      *
      * @param username имя пользователя, которого нужно удалить.
      */
+    @Transactional
     public void deleteUserByUsername(String username) {
         userRepository.deleteByUsername(username);
     }

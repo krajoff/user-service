@@ -20,12 +20,12 @@ import org.springframework.web.bind.annotation.*;
  */
 @Tag(name = "Профиль пользователя (контактная информация)",
         description = "API для работы c контактной информацией пользователя")
-@RequestMapping("/api/v1/admin/user/contact")
+@RequestMapping("/api/v1/user/contact")
 @RestController
 public class ContactController {
 
     @Autowired
-    @Qualifier("userProfileService")
+    @Qualifier("userContactInfoService")
     private UserService userService;
 
     @Autowired
@@ -39,7 +39,7 @@ public class ContactController {
      *
      * @return DTO с информацией о пользователе
      */
-    @PostMapping
+    @PostMapping()
     @Operation(summary = "Создание пользователя")
     public UserDto create(@RequestBody UserDto userDto) {
         User user = userService.createUser(userMapper.userDtoToUser(userDto));
@@ -52,11 +52,11 @@ public class ContactController {
      * @return Информацией о пользователе
      */
     @GetMapping("/{username}")
-    //  @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Получение информации о пользователе")
     public UserDto getByUsername(@PathVariable String username) {
-        User user = authService.getCurrentUser();
-        return userMapper.userToUserDto(user);    }
+        return userMapper.userToUserDto(userService
+                .getUserByUsername(username));
+    }
 
     /**
      * Обновление информации о пользователе по username.
@@ -67,6 +67,7 @@ public class ContactController {
     @Operation(summary = "Обновление информации о пользователе")
     public UserDto updateByUsername(@PathVariable String username,
                                     @RequestBody UserDto userDto) {
+        System.out.println(userDto);
         User user = userService.updateByUsername(username,
                 userMapper.userDtoToUser(userDto));
         return userMapper.userToUserDto(user);

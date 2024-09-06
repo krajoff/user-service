@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Профиль пользователя (контактная информация)",
         description = "API для работы c детальной информацией пользователя")
-@RequestMapping("/api/v1/admin/user/detail")
+@RequestMapping("/api/v1/user/detail")
 @RestController
 public class DetailsController {
 

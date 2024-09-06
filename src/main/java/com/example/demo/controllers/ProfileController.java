@@ -8,7 +8,6 @@ import com.example.demo.utils.UserMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +42,7 @@ public class ProfileController {
      */
     @GetMapping()
     @Operation(summary = "Получение информации пользователя о самом себе")
-    public UserDto getUser() {
+    public UserDto getCurrentUser() {
         User user = authService.getCurrentUser();
         return userMapper.userToUserDto(user);
     }
@@ -60,7 +59,7 @@ public class ProfileController {
         User user = authService.getCurrentUser();
         userService.updateByUsername(user.getUsername(),
                 userMapper.userDtoToUser(userDto));
-        return getUser();
+        return getCurrentUser();
     }
 
     /**

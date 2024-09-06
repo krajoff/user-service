@@ -2,7 +2,6 @@ package com.example.demo.services.user.impl;
 
 import com.example.demo.models.user.User;
 import com.example.demo.repositories.user.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +14,15 @@ public class UserContactInfoService extends UserProfileService {
                                   PasswordEncoder passwordEncoder) {
         super(userRepository, passwordEncoder);
     }
-
-    @Override
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+    public User updateByUsername(String username, User user) {
+        User existingUser = getUserByUsername(username);
+        updateProfile(existingUser, user);
+        saveUser(existingUser);
+        return existingUser;
+    }
     protected User updateProfile(User existingUser, User user) {
         if (user.getPhoneNumber() != null)
             existingUser.setPhoneNumber(user.getPhoneNumber());
@@ -25,8 +31,7 @@ public class UserContactInfoService extends UserProfileService {
         return existingUser;
     }
 
-    public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public User saveUser(User user) {
+        return userRepository.save(user);
     }
-
 }

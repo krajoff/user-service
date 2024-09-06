@@ -17,10 +17,20 @@ public class UserDetailsInfoService extends UserProfileService {
 
     @Override
     protected User updateProfile(User existingUser, User user) {
+        if (user.getFirstname() != null)
+            existingUser.setFirstname(user.getFirstname());
+        if (user.getSurname() != null)
+            existingUser.setSurname(user.getSurname());
+        if (user.getPatronymic() != null)
+            existingUser.setPatronymic(user.getPatronymic());
         if (user.getPhoneNumber() != null)
             existingUser.setPhoneNumber(user.getPhoneNumber());
-        if (user.getEmail() != null)
-            existingUser.setEmail(user.getEmail());
+        if (user.getBirthDate() != null)
+            existingUser.setBirthDate(user.getBirthDate());
+        if (user.getPhoto() != null)
+            existingUser.setPhoto(user.getPhoto());
+        if (user.getPassword() != null)
+            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
         return existingUser;
     }
 
