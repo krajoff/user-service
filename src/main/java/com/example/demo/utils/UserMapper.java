@@ -25,7 +25,6 @@ public abstract class UserMapper {
      * @param userDto сущность UserDto
      * @return объект User
      */
-    @Mapping(target = "password", ignore = true)
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)

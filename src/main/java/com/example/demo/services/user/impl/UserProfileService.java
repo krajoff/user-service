@@ -92,7 +92,8 @@ public class UserProfileService implements
     public User updateUserById(Long id, User user) {
         User existingUser = getUserById(id);
         updateProfile(existingUser, user);
-        return saveUser(existingUser);
+        saveUser(existingUser);
+        return getUserById(id);
     }
 
     /**
@@ -106,7 +107,7 @@ public class UserProfileService implements
         User existingUser = getUserByUsername(username);
         updateProfile(existingUser, user);
         saveUser(existingUser);
-        return existingUser;
+        return getUserByUsername(username);
     }
 
     /**
