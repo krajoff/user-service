@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 public class ProfileController {
 
     @Autowired
+    @Qualifier("userProfileService")
     private UserService userService;
 
     @Autowired
@@ -56,7 +58,8 @@ public class ProfileController {
     @Operation(summary = "Обновление информации пользователя о самом себе")
     public UserDto updateUser(@RequestBody UserDto userDto) {
         User user = authService.getCurrentUser();
-        userService.updateUser(user.getId(), userMapper.userDtoToUser(userDto));
+        userService.updateByUsername(user.getUsername(),
+                userMapper.userDtoToUser(userDto));
         return getUser();
     }
 
@@ -71,7 +74,7 @@ public class ProfileController {
     public ResponseEntity<?> deleteUser() {
         try {
             User user = authService.getCurrentUser();
-            userService.deleteUser(user.getId());
+            userService.deleteUserByUsername(user.getUsername());
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

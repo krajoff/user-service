@@ -12,14 +12,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface UserService {
 
     /**
-     * Получает пользователя по его уникальному идентификатору.
-     *
-     * @param id уникальный идентификатор пользователя
-     * @return {@link User} с указанным идентификатором
-     */
-    User getUserById(Long id);
-
-    /**
      * Создает нового пользователя.
      *
      * @param user сущность {@link User}, которая должна быть создана
@@ -28,46 +20,12 @@ public interface UserService {
     User createUser(User user);
 
     /**
-     * Обновляет информацию о существующем пользователе по его идентификатору.
+     * Получает пользователя по его уникальному идентификатору.
      *
      * @param id уникальный идентификатор пользователя
-     * @param user обновленные данные сущности {@link User}
-     * @return обновленная сущность {@link User}
+     * @return {@link User} с указанным идентификатором
      */
-    User updateUser(Long id, User user);
-
-    /**
-     * Обновляет информацию о существующем пользователе по
-     * его имени пользователя (username).
-     *
-     * @param username имя пользователя
-     * @param user обновленные данные сущности {@link User}
-     * @return обновленная сущность {@link User}
-     */
-    User updateByUsername(String username, User user);
-
-    /**
-     * Удаляет пользователя по его уникальному идентификатору.
-     *
-     * @param id уникальный идентификатор пользователя
-     */
-    void deleteUser(Long id);
-
-    /**
-     * Удаляет пользователя по его имени пользователя (username).
-     *
-     * @param username имя пользователя
-     */
-    void deleteUserByUsername(String username);
-
-    /**
-     * Сохраняет информацию о пользователе. Может быть использован
-     * для создания нового или обновления существующего пользователя.
-     *
-     * @param user сущность {@link User}, которую необходимо сохранить
-     * @return сохраненная сущность {@link User}
-     */
-    User saveUser(User user);
+    User getUserById(Long id);
 
     /**
      * Получает пользователя по его имени пользователя (username).
@@ -84,6 +42,48 @@ public interface UserService {
      * @return {@link User} с указанным email.
      */
     User getUserByEmail(String email);
+
+    /**
+     * Обновляет информацию о существующем пользователе по его идентификатору.
+     *
+     * @param id уникальный идентификатор пользователя
+     * @param user обновленные данные сущности {@link User}
+     * @return обновленная сущность {@link User}
+     */
+    User updateUserById(Long id, User user);
+
+    /**
+     * Обновляет информацию о существующем пользователе по
+     * его имени пользователя (username).
+     *
+     * @param username имя пользователя
+     * @param user обновленные данные сущности {@link User}
+     * @return обновленная сущность {@link User}
+     */
+    User updateByUsername(String username, User user);
+
+    /**
+     * Удаляет пользователя по его уникальному идентификатору.
+     *
+     * @param id уникальный идентификатор пользователя
+     */
+    void deleteUserById(Long id);
+
+    /**
+     * Удаляет пользователя по его имени пользователя (username).
+     *
+     * @param username имя пользователя
+     */
+    void deleteUserByUsername(String username);
+
+    /**
+     * Сохраняет информацию о пользователе. Может быть использован
+     * для создания нового или обновления существующего пользователя.
+     *
+     * @param user сущность {@link User}, которую необходимо сохранить
+     * @return сохраненная сущность {@link User}
+     */
+    User saveUser(User user);
 
     /**
      * Предоставляет сервис для загрузки данных пользователя,

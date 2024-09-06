@@ -1,10 +1,10 @@
-package com.example.demo.services.user;
+package com.example.demo.services.user.impl;
 
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.exceptions.UserAlreadyExistedException;
-import com.example.demo.models.user.Role;
 import com.example.demo.models.user.User;
 import com.example.demo.repositories.user.UserRepository;
+import com.example.demo.services.user.UserService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,21 +13,37 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
- * Реализация сервиса для управления пользователями.
+ * Реализация сервиса для управления данными пользователя.
  * Этот сервис предоставляет методы для выполнения
  * CRUD-операций над сущностями пользователей.
  */
-@Service
-public class UserServiceImpl implements
+@Service("userProfileService")
+public class UserProfileService implements
         UserService, UserDetailsService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    protected final UserRepository userRepository;
+    protected final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository,
-                           @Lazy PasswordEncoder passwordEncoder) {
+    public UserProfileService(UserRepository userRepository,
+                              @Lazy PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    /**
+     * Создает нового пользователя.
+     *
+     * @param user сущность, которая должна быть создана.
+     * @return пользователь.
+     */
+    public User createUser(User user) {
+        if (!userRepository.findByUsernameOrEmail
+                (user.getUsername(), user.getEmail()).isEmpty()) {
+            throw new UserAlreadyExistedException(
+                    "Пользователь с таким логином или " +
+                            "электронной почтой уже существует");
+        }
+        return saveUser(user);
     }
 
     /**
@@ -60,25 +76,9 @@ public class UserServiceImpl implements
      * @return пользователь с указанным адресом электронной почты.
      */
     public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException
                         ("Пользователь с электронной почтой " + email + " не найден"));
-    }
-
-    /**
-     * Создает нового пользователя.
-     *
-     * @param user сущность, которая должна быть создана.
-     * @return пользователь.
-     */
-    public User createUser(User user) {
-        if (!userRepository.findByUsernameOrEmail
-                (user.getUsername(), user.getEmail()).isEmpty()) {
-            throw new UserAlreadyExistedException(
-                    "Пользователь с таким логином или " +
-                            "электронной почтой уже существует");
-        }
-        return saveUser(user);
     }
 
     /**
@@ -88,22 +88,9 @@ public class UserServiceImpl implements
      * @param user сущность пользователя с обновленной информацией.
      * @return обновленный пользователь.
      */
-    public User updateUser(Long id, User user) {
+    public User updateUserById(Long id, User user) {
         User existingUser = getUserById(id);
-        if (user.getFirstname() != null)
-            existingUser.setFirstname(user.getFirstname());
-        if (user.getSurname() != null)
-            existingUser.setSurname(user.getSurname());
-        if (user.getPatronymic() != null)
-            existingUser.setPatronymic(user.getPatronymic());
-        if (user.getPhoneNumber() != null)
-            existingUser.setPhoneNumber(user.getPhoneNumber());
-        if (user.getBirthDate() != null)
-            existingUser.setBirthDate(user.getBirthDate());
-        if (user.getPhoto() != null)
-            existingUser.setPhoto(user.getPhoto());
-        if (user.getPassword() != null)
-            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        updateProfile(existingUser, user);
         return saveUser(existingUser);
     }
 
@@ -116,7 +103,8 @@ public class UserServiceImpl implements
      */
     public User updateByUsername(String username, User user) {
         User existingUser = getUserByUsername(username);
-        updateUser(existingUser.getId(), user);
+        updateProfile(existingUser, user);
+        saveUser(existingUser);
         return existingUser;
     }
 
@@ -125,7 +113,7 @@ public class UserServiceImpl implements
      *
      * @param id идентификатор пользователя для удаления.
      */
-    public void deleteUser(Long id) {
+    public void deleteUserById(Long id) {
         userRepository.deleteById(id);
     }
 
@@ -184,7 +172,26 @@ public class UserServiceImpl implements
         return User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
-                .role(Role.USER)
+                .role(user.getRole())
                 .build();
     }
+
+    protected User updateProfile(User existingUser, User user) {
+        if (user.getFirstname() != null)
+            existingUser.setFirstname(user.getFirstname());
+        if (user.getSurname() != null)
+            existingUser.setSurname(user.getSurname());
+        if (user.getPatronymic() != null)
+            existingUser.setPatronymic(user.getPatronymic());
+        if (user.getPhoneNumber() != null)
+            existingUser.setPhoneNumber(user.getPhoneNumber());
+        if (user.getBirthDate() != null)
+            existingUser.setBirthDate(user.getBirthDate());
+        if (user.getPhoto() != null)
+            existingUser.setPhoto(user.getPhoto());
+        if (user.getPassword() != null)
+            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        return existingUser;
+    }
+
 }

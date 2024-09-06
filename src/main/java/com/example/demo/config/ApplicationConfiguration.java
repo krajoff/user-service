@@ -3,6 +3,7 @@ package com.example.demo.config;
 import com.example.demo.services.user.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Configuration
 public class ApplicationConfiguration {
 
+
     private final UserService userService;
 
     /**
@@ -24,7 +26,8 @@ public class ApplicationConfiguration {
      * @param userService сервис для работы с пользователями, предоставляющий
      *                    данные пользователя по логину
      */
-    public ApplicationConfiguration(UserService userService) {
+    public ApplicationConfiguration(@Qualifier("userProfileService")
+                                    UserService userService) {
         this.userService = userService;
     }
 

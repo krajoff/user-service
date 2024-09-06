@@ -1,9 +1,6 @@
 package com.example.demo.controllers;
 
-import com.example.demo.dtos.DetailedUserDto;
 import com.example.demo.dtos.UserDto;
-import com.example.demo.exceptions.PermissionException;
-import com.example.demo.models.user.Role;
 import com.example.demo.models.user.User;
 import com.example.demo.services.auth.AuthService;
 import com.example.demo.services.user.UserService;
@@ -11,9 +8,7 @@ import com.example.demo.utils.UserMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -25,11 +20,12 @@ import org.springframework.web.bind.annotation.*;
  */
 @Tag(name = "Профиль пользователя (контактная информация)",
         description = "API для работы c контактной информацией пользователя")
-@RequestMapping("/api/v1/admin/contact")
+@RequestMapping("/api/v1/admin/user/contact")
 @RestController
-public class AdminContactInformationController {
+public class ContactController {
 
     @Autowired
+    @Qualifier("userProfileService")
     private UserService userService;
 
     @Autowired
@@ -45,9 +41,9 @@ public class AdminContactInformationController {
      */
     @PostMapping
     @Operation(summary = "Создание пользователя")
-    public User create(@RequestBody UserDto detailedUserDto) {
-        return userService.createUser(userMapper
-                .detailedUserDtoToUser(detailedUserDto));
+    public UserDto create(@RequestBody UserDto userDto) {
+        User user = userService.createUser(userMapper.userDtoToUser(userDto));
+        return userMapper.userToUserDto(user);
     }
 
     /**
@@ -56,10 +52,11 @@ public class AdminContactInformationController {
      * @return Информацией о пользователе
      */
     @GetMapping("/{username}")
+    //  @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Получение информации о пользователе")
-    public User getByUsername(@PathVariable String username) {
-        return userService.getUserByUsername(username);
-    }
+    public UserDto getByUsername(@PathVariable String username) {
+        User user = authService.getCurrentUser();
+        return userMapper.userToUserDto(user);    }
 
     /**
      * Обновление информации о пользователе по username.
@@ -68,10 +65,11 @@ public class AdminContactInformationController {
      */
     @PutMapping("/{username}")
     @Operation(summary = "Обновление информации о пользователе")
-    public User updateByUsername(@PathVariable String username,
-                                 @RequestBody DetailedUserDto detailedUserDto) {
-        return userService.updateByUsername(username,
-                userMapper.detailedUserDtoToUser(detailedUserDto));
+    public UserDto updateByUsername(@PathVariable String username,
+                                    @RequestBody UserDto userDto) {
+        User user = userService.updateByUsername(username,
+                userMapper.userDtoToUser(userDto));
+        return userMapper.userToUserDto(user);
     }
 
     /**

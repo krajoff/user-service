@@ -8,6 +8,7 @@ import com.example.demo.models.user.User;
 import com.example.demo.responces.JwtAuthenticationResponse;
 import com.example.demo.services.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -30,12 +31,22 @@ import org.springframework.stereotype.Service;
  * </p>
  */
 @Service
-@RequiredArgsConstructor
 public class AuthenticationService {
     private final UserService userService;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+
+    public AuthenticationService(@Qualifier("userProfileService")
+                                 UserService userService,
+                                 JwtService jwtService,
+                                 PasswordEncoder passwordEncoder,
+                                 AuthenticationManager authenticationManager) {
+        this.userService = userService;
+        this.jwtService = jwtService;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+    }
 
     /**
      * Регистрация пользователя
@@ -83,5 +94,7 @@ public class AuthenticationService {
                     + ex.getMessage());
         }
     }
+
+
 
 }
