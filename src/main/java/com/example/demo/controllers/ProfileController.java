@@ -7,6 +7,7 @@ import com.example.demo.services.user.UserService;
 import com.example.demo.utils.UserMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -20,20 +21,25 @@ import org.springframework.web.bind.annotation.*;
  * информации о текущем пользователе.
  */
 @Tag(name = "Профиль пользователя",
-        description = "API для работы пользователя со своими данными")
+        description = "API для работы любого пользователя со своими данными")
 @RequestMapping("/api/v1/user")
 @RestController
 public class ProfileController {
 
-    @Autowired
-    @Qualifier("userProfileService")
     private UserService userService;
 
-    @Autowired
     private UserMapper userMapper;
 
-    @Autowired
     private AuthService authService;
+
+    public ProfileController(@Qualifier("userProfileService")
+                             UserService userService,
+                             UserMapper userMapper,
+                             AuthService authService) {
+        this.userService = userService;
+        this.userMapper = userMapper;
+        this.authService = authService;
+    }
 
     /**
      * Получает информацию о текущем пользователе.

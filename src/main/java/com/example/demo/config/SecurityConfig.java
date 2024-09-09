@@ -1,15 +1,18 @@
 package com.example.demo.config;
 
-
-import com.example.demo.models.user.Role;
+import com.example.demo.services.user.UserService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -25,21 +28,21 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final UserService userService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final AuthenticationProvider authenticationProvider;
 
     /**
      * Конструктор для создания экземпляра SecurityConfig.
      *
+     * @param userService             сервис по работе с репозиторием пользователей
      * @param jwtAuthenticationFilter фильтр для обработки JWT-аутентификации
-     * @param authenticationProvider провайдер аутентификации для проверки учетных
-     *                               данных пользователей
      */
     public SecurityConfig(
-            JwtAuthenticationFilter jwtAuthenticationFilter,
-            AuthenticationProvider authenticationProvider
-    ) {
-        this.authenticationProvider = authenticationProvider;
+            @Qualifier("userProfileService")
+            UserService userService,
+            JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.userService = userService;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
@@ -70,10 +73,64 @@ public class SecurityConfig {
                     return corsConfiguration;
                 }))
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
-                .authenticationProvider(authenticationProvider)
+                .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class)
                 .csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
+
+    /**
+     * Создает бин UserDetailsService, который предоставляет
+     * информацию о пользователе на основе логина.
+     *
+     * @return UserDetailsService, который использует метод getUserByUsername
+     * из userService для получения данных пользователя.
+     */
+    @Bean
+    UserDetailsService userDetailsService() {
+        return userService::getUserByUsername;
+    }
+
+    /**
+     * Создает бин BCryptPasswordEncoder для кодирования паролей пользователей.
+     *
+     * @return BCryptPasswordEncoder, используемый для безопасного хранения паролей.
+     */
+    @Bean
+    BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    /**
+     * Создает бин AuthenticationManager для управления процессом аутентификации.
+     *
+     * @param config объект AuthenticationConfiguration, используемый для
+     *               получения AuthenticationManager.
+     * @return AuthenticationManager, который используется для аутентификации
+     * пользователей.
+     * @throws Exception в случае ошибок получения AuthenticationManager.
+     */
+    @Bean
+    public AuthenticationManager authenticationManager
+    (AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+    /**
+     * Создает бин AuthenticationProvider для настройки процесса аутентификации.
+     *
+     * @return AuthenticationProvider, который использует UserDetailsService
+     * и PasswordEncoder для проверки учетных данных пользователей.
+     */
+    @Bean
+    AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+
+        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setPasswordEncoder(passwordEncoder());
+
+        return authProvider;
+    }
+
 }

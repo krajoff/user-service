@@ -106,8 +106,8 @@ public class UserProfileService implements
     public User updateByUsername(String username, User user) {
         User existingUser = getUserByUsername(username);
         updateProfile(existingUser, user);
-        saveUser(existingUser);
-        return getUserByUsername(username);
+        User savedUser = saveUser(existingUser);
+        return savedUser;
     }
 
     /**

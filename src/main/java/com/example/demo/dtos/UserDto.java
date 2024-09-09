@@ -1,10 +1,7 @@
 package com.example.demo.dtos;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
@@ -13,9 +10,11 @@ import java.time.LocalDate;
 @Getter
 @ToString
 @EqualsAndHashCode
+@RequiredArgsConstructor
 public class UserDto {
 
     @Schema(description = "Уникальный идентификатор пользователя", example = "1")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @Schema(description = "Имя пользователя", example = "Николай")

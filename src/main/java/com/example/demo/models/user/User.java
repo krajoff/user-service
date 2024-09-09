@@ -1,13 +1,14 @@
 package com.example.demo.models.user;
 
+import com.example.demo.models.role.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,12 +28,12 @@ import java.util.List;
  * </p>
  */
 @Entity(name = "User")
-@Builder
 @Table(name = "users")
-@EqualsAndHashCode
 @Getter
 @Setter
 @ToString
+@Builder
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements UserDetails {
@@ -72,6 +73,7 @@ public class User implements UserDetails {
      * Дата рождения пользователя.
      */
     @Column(name = "birth_date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
 
     /**

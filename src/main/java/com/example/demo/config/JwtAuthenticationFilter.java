@@ -7,9 +7,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -63,8 +61,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     /**
-     * Фильтрует входящие запросы, проверяя наличие JWT-токена в заголовке Authorization.
-     * Если токен найден и валиден, происходит извлечение данных пользователя и его аутентификация.
+     * Фильтрует входящие запросы, проверяя наличие JWT-токена в заголовке
+     * Authorization. Если токен найден и валиден, происходит извлечение
+     * данных пользователя и его аутентификация.
      *
      * @param request     HTTP-запрос
      * @param response    HTTP-ответ

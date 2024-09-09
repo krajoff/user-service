@@ -11,9 +11,9 @@ User Service — это приложение на основе Spring Boot,
 2. Сборщик: Gradle
 3. ORM: Hibernate
 4. БД: Postgres
-5. Контейнер: Docker
+5. Контейнер: Docker-compose
 6. Документация: Springdoc-openapi, Javadoc
-7. Авторизация: Spring Security
+7. Авторизация: Spring Security (Bearer Token)
 
 </details>
 
@@ -29,7 +29,7 @@ User Service — это приложение на основе Spring Boot,
 <details open> 
 <summary><b>Работа с пользователями</b></summary>
 
-1. Регистрация пользователя. 
+* Регистрация пользователя. 
 Endpoint: ``POST localhost:8080/api/v1/auth/signup``
 
 ```json
@@ -40,7 +40,7 @@ Endpoint: ``POST localhost:8080/api/v1/auth/signup``
 }
 ```
 
-2. Аутентификация пользователя. 
+* Аутентификация только, что созданного пользователя.
 Endpoint: ``POST localhost:8080/api/v1/auth/login``
 
 ```json
@@ -49,8 +49,27 @@ Endpoint: ``POST localhost:8080/api/v1/auth/login``
   "password": "password"
 }
 ```
+* Или аутентификация пользователя, который уже записан в базу данных через init.sql
+```json
+{
+  "username": "petrov_pp",
+  "password": "123456"
+}
+```
+* Получение данных о пользователе.
+Endpoint: ``GET localhost:8080/api/v1/user/nikolay_vp``
 
-3. Изменение данных пользователя.
+```json
+{
+   "firstname": "Николай",
+   "surname": "Яшин",
+   "patronymic": "Владимирович",
+   "birthDate": "2014-09-05",
+   "phoneNumber": "+79001234560"
+}
+```
+
+* Изменение данных пользователя.
    Endpoint: ``PUT localhost:8080/api/v1/user``
 
 ```json
@@ -63,7 +82,7 @@ Endpoint: ``POST localhost:8080/api/v1/auth/login``
 }
 ```
 
-4. Изменение контактной информации пользователя.
+* Изменение контактной информации пользователя.
    Endpoint: ``PUT localhost:8080/api/v1/user/contact/nikolay_vp``
 
 ```json
@@ -73,7 +92,7 @@ Endpoint: ``POST localhost:8080/api/v1/auth/login``
 }
 ```
 
-5. Изменение детальной информации пользователя.
+* Изменение детальной информации пользователя.
 Endpoint: ``PUT localhost:8080/api/v1/user/detail/nikolay_vp``
 
 ```json
@@ -86,7 +105,7 @@ Endpoint: ``PUT localhost:8080/api/v1/user/detail/nikolay_vp``
 }
 ```
 
-6. Удаление пользователя.
+* Удаление пользователя.
 Endpoint: ``DELETE localhost:8080/api/v1/user/contact/nikolay_vp``
 
 

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/auth")
 @RestController
 public class AuthenticationController {
+
     private final JwtService jwtService;
 
     private final AuthenticationService authenticationService;
@@ -32,7 +33,7 @@ public class AuthenticationController {
      * @param authenticationService сервис для аутентификации пользователей
      */
     public AuthenticationController(JwtService jwtService,
-                                       AuthenticationService authenticationService) {
+                                    AuthenticationService authenticationService) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
     }
@@ -42,6 +43,7 @@ public class AuthenticationController {
      * <p>
      * При успешной регистрации возвращает JWT-токен для нового пользователя.
      * </p>
+     *
      * @param request объект запроса с данными для регистрации
      * @return ответ с JWT-токеном
      */
@@ -56,6 +58,7 @@ public class AuthenticationController {
      * <p>
      * При успешной аутентификации возвращает JWT-токен для пользователя.
      * </p>
+     *
      * @param request объект запроса с данными для входа
      * @return ответ с JWT-токеном
      */

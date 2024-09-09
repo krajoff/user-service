@@ -33,6 +33,7 @@ import java.util.function.Function;
  */
 @Service
 public class JwtService {
+
     @Value("${TOKEN_KEY}")
     private String jwtSigningKey;
 
@@ -146,8 +147,8 @@ public class JwtService {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e) {
-            throw new JwtExpiredException("Token lifetime is over: "
-                    + e.getMessage());
+            throw new JwtExpiredException("Время жизни токена завершилось." +
+                    "Необходимо получить новый: " + e.getMessage());
         }
     }
 

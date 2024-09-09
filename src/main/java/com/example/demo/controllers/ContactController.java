@@ -7,10 +7,8 @@ import com.example.demo.services.user.UserService;
 import com.example.demo.utils.UserMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
-
 
 /**
  * Контроллер, предоставляющий API для управления контактной
@@ -18,24 +16,30 @@ import org.springframework.web.bind.annotation.*;
  * предоставляет методы для получения, обновления и удаления
  * информации о пользователях.
  */
+
 @Tag(name = "Профиль пользователя (контактная информация)",
         description = "API для работы c контактной информацией пользователя")
 @RequestMapping("/api/v1/user/contact")
 @RestController
 public class ContactController {
 
-    @Autowired
-    @Qualifier("userContactInfoService")
     private UserService userService;
 
-    @Autowired
     private UserMapper userMapper;
 
-    @Autowired
     private AuthService authService;
 
+    public ContactController(@Qualifier("userContactInfoService")
+                             UserService userService,
+                             UserMapper userMapper,
+                             AuthService authService) {
+        this.userService = userService;
+        this.userMapper = userMapper;
+        this.authService = authService;
+    }
+
     /**
-     * Создание пользователе.
+     * Создание пользователя.
      *
      * @return DTO с информацией о пользователе
      */
