@@ -46,4 +46,7 @@ public class UserDto {
     @Schema(description = "Путь к фотографии пользователя")
     private String photo;
 
+    @Schema(description = "JWT рефреш-токен")
+    private String token;
+
 }

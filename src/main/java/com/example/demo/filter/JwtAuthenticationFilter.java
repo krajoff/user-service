@@ -1,7 +1,7 @@
-package com.example.demo.config;
+package com.example.demo.filter;
 
-import com.example.demo.exceptions.JwtAuthException;
-import com.example.demo.services.jwt.JwtService;
+import com.example.demo.exceptions.jwt.JwtAuthException;
+import com.example.demo.services.tokens.access.AccessTokenService;
 import com.example.demo.services.user.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -27,7 +27,7 @@ import java.io.IOException;
  * контекст безопасности для дальнейшей обработки.
  *
  * <p>Этот фильтр является частью цепочки фильтров Spring Security и
- * выполняется один раз за запрос.Он использует {@link JwtService}
+ * выполняется один раз за запрос. Он использует {@link AccessTokenService}
  * для обработки токена (его извлечения и проверки) и {@link UserService}
  * для загрузки данных пользователя.</p>
  *
@@ -40,23 +40,23 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     /**
-     * Префикс для JWT-токена в заголовке Authorization.
+     * Префикс для токена доступа в заголовке Authorization.
      */
     public static final String BEARER_PREFIX = "Bearer ";
 
     /**
-     * Название HTTP-заголовка, содержащего JWT-токен.
+     * Название HTTP-заголовка, содержащего токен доступа.
      */
     public static final String HEADER_NAME = "Authorization";
 
-    private final JwtService jwtService;
+    private final AccessTokenService accessTokenService;
 
     private final UserService userService;
 
-    public JwtAuthenticationFilter(JwtService jwtService,
+    public JwtAuthenticationFilter(AccessTokenService accessTokenService,
                                    @Qualifier("userProfileService")
                                    UserService userService) {
-        this.jwtService = jwtService;
+        this.accessTokenService = accessTokenService;
         this.userService = userService;
     }
 
@@ -95,17 +95,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         // Обрезаем, получаем имя пользователя из токена
-        final String username = jwtService.extractUsername(jwt);
+        final String username = accessTokenService.getUsername(jwt);
         if (StringUtils.isNotEmpty(username)
-                && SecurityContextHolder
-                .getContext().getAuthentication() == null) {
+                && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             UserDetails userDetails = userService
                     .userDetailsService()
                     .loadUserByUsername(username);
 
             // Если токен валиден, то аутентифицируем пользователя
-            if (jwtService.isTokenValid(jwt, userDetails)) {
+            if (accessTokenService.isTokenValid(jwt, userDetails)) {
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
 
                 UsernamePasswordAuthenticationToken authToken =

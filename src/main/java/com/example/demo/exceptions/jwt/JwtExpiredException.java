@@ -1,4 +1,4 @@
-package com.example.demo.exceptions;
+package com.example.demo.exceptions.jwt;
 
 /**
  * Исключение для обработки случаев истечения срока действия JWT (JSON Web Token).

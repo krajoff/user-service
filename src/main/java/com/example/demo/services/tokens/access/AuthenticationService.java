@@ -1,11 +1,13 @@
-package com.example.demo.services.jwt;
+package com.example.demo.services.tokens.access;
 
 import com.example.demo.exceptions.AuthException;
-import com.example.demo.requests.SignInRequest;
-import com.example.demo.requests.SignUpRequest;
+import com.example.demo.payloads.requests.SignInRequest;
+import com.example.demo.payloads.requests.SignUpRequest;
 import com.example.demo.models.role.Role;
 import com.example.demo.models.user.User;
-import com.example.demo.responces.JwtAuthenticationResponse;
+import com.example.demo.payloads.response.JwtAuthenticationResponse;
+import com.example.demo.payloads.response.TokenResponse;
+import com.example.demo.services.tokens.refresh.RefreshTokenService;
 import com.example.demo.services.user.UserService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,27 +28,26 @@ import org.springframework.stereotype.Service;
  * <p>
  * Зависимости, инжектируемые в этот сервис, включают:
  * - {@link UserService} для операций, связанных с пользователями.
- * - {@link JwtService} для генерации и управления токенами JWT.
+ * - {@link AccessTokenService} для генерации и управления токенами JWT.
  * - {@link PasswordEncoder} для кодирования паролей пользователей.
- * - {@link AuthenticationManager} для проверки подлинности учетных данных
- * пользователей.
+ * - {@link AuthenticationManager} для проверки подлинности учетных данных пользователей.
  * </p>
  */
 @Service
 public class AuthenticationService {
 
     private final UserService userService;
-    private final JwtService jwtService;
+    private final AccessTokenService accessTokenService;
+    private final RefreshTokenService refreshTokenService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationService(@Qualifier("userProfileService")
-                                 UserService userService,
-                                 JwtService jwtService,
-                                 PasswordEncoder passwordEncoder,
-                                 AuthenticationManager authenticationManager) {
+    public AuthenticationService(@Qualifier("userProfileService") UserService userService,
+                                 AccessTokenService accessTokenService, RefreshTokenService refreshTokenService,
+                                 PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
         this.userService = userService;
-        this.jwtService = jwtService;
+        this.accessTokenService = accessTokenService;
+        this.refreshTokenService = refreshTokenService;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
     }
@@ -62,13 +63,14 @@ public class AuthenticationService {
                 .username(request.getUsername().toLowerCase())
                 .email(request.getEmail().toLowerCase())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.ROLE_USER)
+                .role(Role.USER)
                 .build();
 
         userService.createUser(user);
 
-        var jwt = jwtService.generateToken(user);
-        return new JwtAuthenticationResponse(jwt);
+        var accessToken = accessTokenService.generateToken(user);
+        var refreshToken = refreshTokenService.create(user.getUsername()).getToken();
+        return new JwtAuthenticationResponse(accessToken, refreshToken);
     }
 
     /**
@@ -88,15 +90,14 @@ public class AuthenticationService {
                     ));
 
             var user = userService.getUserByUsername(request.getUsername());
-            var jwt = jwtService.generateToken(user);
-            return new JwtAuthenticationResponse(jwt);
+            var accessToken = accessTokenService.generateToken(user);
+            var refreshToken = refreshTokenService.create(user.getUsername()).getToken();
+
+            return new JwtAuthenticationResponse(accessToken, refreshToken);
 
         } catch (AuthenticationException ex) {
             throw new AuthException("Ошибка аутентификации пользователя: "
                     + ex.getMessage());
         }
     }
-
-
-
 }

@@ -1,5 +1,7 @@
 package com.example.demo.exceptions;
 
+import com.example.demo.exceptions.jwt.JwtAuthException;
+import com.example.demo.exceptions.jwt.JwtExpiredException;
 import com.example.demo.models.errors.AppError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

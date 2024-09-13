@@ -16,7 +16,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Класс пользователя в системе.
@@ -98,10 +99,10 @@ public class User implements UserDetails {
     private String password;
 
     /**
-     * Роль пользователя в системе. Хранится в виде строки.
+     * Роль пользователя в системе.
      */
-    @Enumerated(EnumType.STRING)
     @Column(name = "role")
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     /**
@@ -118,6 +119,13 @@ public class User implements UserDetails {
     @Column(name = "photo")
     @Size(max = 255)
     private String photo;
+
+    /**
+     * Рефреш токен.
+     */
+    @Column(name = "token")
+    @OneToOne(mappedBy = "user")
+    private String token;
 
     /**
      * Дата создания пользователя. Поле автоматически заполняется
@@ -149,9 +157,7 @@ public class User implements UserDetails {
      * @return коллекция с единственной ролью пользователя
      */
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority grantedAuthority =
-                new SimpleGrantedAuthority(role.name());
-        return List.of(grantedAuthority);
+        return Set.of(new SimpleGrantedAuthority(role.getAuthority()));
     }
 
     /**

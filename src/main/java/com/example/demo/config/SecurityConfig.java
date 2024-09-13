@@ -1,5 +1,6 @@
 package com.example.demo.config;
 
+import com.example.demo.filter.JwtAuthenticationFilter;
 import com.example.demo.services.user.UserService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;

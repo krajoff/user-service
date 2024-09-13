@@ -1,23 +1,28 @@
 package com.example.demo.models.role;
 
+import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+
+
 /**
  * Перечисление, представляющее возможные роли.
  */
-public enum Role {
+@RequiredArgsConstructor
+@Entity(name = "Role")
+public enum Role implements GrantedAuthority {
 
-    /**
-     * Роль модератора ресурсов.
-     */
-    ROLE_MODERATOR,
+    ADMIN("ROLE_ADMIN"),
+    MODERATOR("ROLE_MODERATOR"),
+    USER("ROLE_USER"),
+    DELETED("DELETED_ACCOUNT");
 
-    /**
-     * Роль администратора ресурсов.
-     */
-    ROLE_ADMIN,
+    private final String authority;
 
-    /**
-     * Роль пользователя ресурсов.
-     */
-    ROLE_USER
+    @Override
+    public String getAuthority() {
+        return authority;
+    }
+
 }
 

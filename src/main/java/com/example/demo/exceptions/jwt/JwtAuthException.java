@@ -1,4 +1,4 @@
-package com.example.demo.exceptions;
+package com.example.demo.exceptions.jwt;
 
 /**
  * Исключение для обработки ошибок, связанных с JWT (JSON Web Token).

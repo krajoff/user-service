@@ -1,4 +1,4 @@
-package com.example.demo.requests;
+package com.example.demo.payloads.requests;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -13,7 +13,8 @@ import lombok.*;
  * имя пользователя и пароль соответствуют требуемому формату и длине.
  * </p>
  */
-@Data
+@Setter
+@Getter
 @Schema(description = "Sign in request")
 public class SignInRequest {
 

@@ -1,4 +1,4 @@
-package com.example.demo.requests;
+package com.example.demo.payloads.requests;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
