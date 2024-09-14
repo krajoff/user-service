@@ -9,7 +9,6 @@ import org.springframework.security.core.GrantedAuthority;
  * Перечисление, представляющее возможные роли.
  */
 @RequiredArgsConstructor
-@Entity(name = "Role")
 public enum Role implements GrantedAuthority {
 
     ADMIN("ROLE_ADMIN"),

@@ -40,8 +40,7 @@ public class SecurityConfig {
      * @param jwtAuthenticationFilter фильтр для обработки JWT-аутентификации
      */
     public SecurityConfig(
-            @Qualifier("userProfileService")
-            UserService userService,
+            @Qualifier("userProfileService") UserService userService,
             JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.userService = userService;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
@@ -83,7 +82,7 @@ public class SecurityConfig {
 
     /**
      * Создает бин UserDetailsService, который предоставляет
-     * информацию о пользователе на основе логина.
+     * информацию о пользователе на основе логина / имени пользователя.
      *
      * @return UserDetailsService, который использует метод getUserByUsername
      * из userService для получения данных пользователя.
@@ -113,8 +112,7 @@ public class SecurityConfig {
      * @throws Exception в случае ошибок получения AuthenticationManager.
      */
     @Bean
-    public AuthenticationManager authenticationManager
-    (AuthenticationConfiguration config) throws Exception {
+    public AuthenticationManager authenticationManager (AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
@@ -125,7 +123,7 @@ public class SecurityConfig {
      * и PasswordEncoder для проверки учетных данных пользователей.
      */
     @Bean
-    AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 
         authProvider.setUserDetailsService(userDetailsService());

@@ -1,8 +1,8 @@
 package com.example.demo.services.user.impl;
 
 import com.example.demo.dtos.UserDto;
-import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.exceptions.UserAlreadyExistedException;
+import com.example.demo.exceptions.UserNotFoundException;
 import com.example.demo.models.user.User;
 import com.example.demo.repositories.user.UserRepository;
 import com.example.demo.services.user.UserService;
@@ -44,9 +44,8 @@ public class UserProfileService implements
     public User createUser(User user) {
         if (!userRepository.findByUsernameOrEmail
                 (user.getUsername(), user.getEmail()).isEmpty()) {
-            throw new UserAlreadyExistedException(
-                    "Пользователь с таким логином или " +
-                            "электронной почтой уже существует");
+            throw new UserAlreadyExistedException("Пользователь с таким логином или " +
+                            "электронной почтой уже существует.");
         }
         return saveUser(user);
     }
@@ -56,11 +55,11 @@ public class UserProfileService implements
      *
      * @param id уникальный идентификатор пользователя.
      * @return пользователь с указанным идентификатором.
-     * @throws ResourceNotFoundException если пользователь с указанным ID не существует.
+     * @throws UserNotFoundException если пользователь с указанным ID не существует.
      */
     public User getUserById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException
+                .orElseThrow(() -> new UserNotFoundException
                         ("Пользователь с id = " + id + " не найден"));
     }
 
@@ -82,7 +81,7 @@ public class UserProfileService implements
      */
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(
-                () -> new ResourceNotFoundException
+                () -> new UserNotFoundException
                         ("Пользователь с электронной почтой " + email + " не найден"));
     }
 

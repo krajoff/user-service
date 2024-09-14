@@ -16,7 +16,6 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @RequiredArgsConstructor
-@NoArgsConstructor
 @Schema(description = "Access and refresh tokens response")
 public class JwtAuthenticationResponse {
 

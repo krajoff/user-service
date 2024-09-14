@@ -4,8 +4,10 @@ import com.example.demo.exceptions.jwt.RefreshTokenException;
 import com.example.demo.models.token.RefreshToken;
 import com.example.demo.repositories.token.RefreshTokenRepository;
 import com.example.demo.services.user.UserService;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,16 +17,21 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Value("${REFRESH_TOKEN_EXPIRATION}")
-    private final long RefreshTokenExpiration;
+    private long RefreshTokenExpiration;
 
-    @Autowired
     private RefreshTokenRepository refreshTokenRepository;
 
+    private final UserService userService;
     @Autowired
-    private UserService userService;
+    public RefreshTokenServiceImpl(RefreshTokenRepository refreshTokenRepository,
+                                   @Qualifier("userProfileService") UserService userService) {
+        this.refreshTokenRepository = refreshTokenRepository;
+        this.userService = userService;
+    }
 
     public Optional<RefreshToken> findByToken(String token) {
         return refreshTokenRepository.findByToken(token);

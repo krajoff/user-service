@@ -2,6 +2,7 @@ package com.example.demo.services.user.impl;
 
 import com.example.demo.models.user.User;
 import com.example.demo.repositories.user.UserRepository;
+import com.example.demo.utils.UserMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -11,8 +12,9 @@ import org.springframework.stereotype.Service;
 @Service("userDetailsInfoService")
 public class UserDetailsInfoService extends UserProfileService {
     public UserDetailsInfoService(UserRepository userRepository,
-                              PasswordEncoder passwordEncoder) {
-        super(userRepository, passwordEncoder);
+                                  PasswordEncoder passwordEncoder,
+                                  UserMapper userMapper) {
+        super(userRepository, passwordEncoder, userMapper);
     }
 
     @Override

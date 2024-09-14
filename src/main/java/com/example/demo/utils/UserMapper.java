@@ -29,6 +29,7 @@ public abstract class UserMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "version", ignore = true)
+    @Mapping(target = "refreshToken", ignore = true)
     public abstract User userDtoToUser(UserDto userDto);
 
 }

@@ -1,6 +1,7 @@
 package com.example.demo.models.user;
 
 import com.example.demo.models.role.Role;
+import com.example.demo.models.token.RefreshToken;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
@@ -121,11 +122,11 @@ public class User implements UserDetails {
     private String photo;
 
     /**
-     * Рефреш токен.
+     * Рефреш-токен.
      */
-    @Column(name = "token")
-    @OneToOne(mappedBy = "user")
-    private String token;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY, optional = false)
+    private RefreshToken refreshToken;
 
     /**
      * Дата создания пользователя. Поле автоматически заполняется
