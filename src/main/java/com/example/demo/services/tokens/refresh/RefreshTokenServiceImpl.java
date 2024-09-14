@@ -25,7 +25,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     private RefreshTokenRepository refreshTokenRepository;
 
-    private final UserService userService;
+    private UserService userService;
     @Autowired
     public RefreshTokenServiceImpl(RefreshTokenRepository refreshTokenRepository,
                                    @Qualifier("userProfileService") UserService userService) {
