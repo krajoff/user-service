@@ -1,8 +1,8 @@
 package com.example.demo.services.user.impl;
 
 import com.example.demo.dtos.UserDto;
-import com.example.demo.exceptions.UserAlreadyExistedException;
-import com.example.demo.exceptions.UserNotFoundException;
+import com.example.demo.exceptions.user.UserAlreadyExistedException;
+import com.example.demo.exceptions.user.UserNotFoundException;
 import com.example.demo.models.user.User;
 import com.example.demo.repositories.user.UserRepository;
 import com.example.demo.services.user.UserService;

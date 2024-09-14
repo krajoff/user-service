@@ -1,6 +1,6 @@
 package com.example.demo.services.auth;
 
-import com.example.demo.exceptions.AuthException;
+import com.example.demo.exceptions.auth.AuthException;
 import com.example.demo.payloads.requests.SignInRequest;
 import com.example.demo.payloads.requests.SignUpRequest;
 import com.example.demo.models.role.Role;

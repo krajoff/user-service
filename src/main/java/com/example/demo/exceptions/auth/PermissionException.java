@@ -1,14 +1,14 @@
-package com.example.demo.exceptions;
+package com.example.demo.exceptions.auth;
 
-public class UserAlreadyExistedException extends RuntimeException {
+public class PermissionException extends RuntimeException {
 
     /**
-     * Создает новое исключение UserAlreadyExistedException с заданным сообщением.
+     * Создает новое исключение PermissionException с заданным сообщением.
      *
      * @param message сообщение, которое описывает причину исключения,
      *                указывающее на то, что запрашиваемый ресурс не найден.
      */
-    public UserAlreadyExistedException(String message) {
+    public PermissionException(String message) {
         super(message);
     }
 }

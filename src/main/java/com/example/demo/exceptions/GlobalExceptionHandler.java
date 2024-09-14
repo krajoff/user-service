@@ -1,7 +1,11 @@
 package com.example.demo.exceptions;
 
+import com.example.demo.exceptions.auth.AuthException;
+import com.example.demo.exceptions.auth.PermissionException;
 import com.example.demo.exceptions.jwt.JwtAuthException;
 import com.example.demo.exceptions.jwt.JwtExpiredException;
+import com.example.demo.exceptions.user.UserAlreadyExistedException;
+import com.example.demo.exceptions.user.UserNotFoundException;
 import com.example.demo.models.errors.AppError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.example.demo.exceptions;
+package com.example.demo.exceptions.auth;
 
 /**
  * Исключение для обработки ошибок аутентификации.
