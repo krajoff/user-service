@@ -1,10 +1,12 @@
 package com.example.demo.services.user.impl;
 
+import com.example.demo.dtos.UserDto;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.exceptions.UserAlreadyExistedException;
 import com.example.demo.models.user.User;
 import com.example.demo.repositories.user.UserRepository;
 import com.example.demo.services.user.UserService;
+import com.example.demo.utils.UserMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,13 +24,15 @@ import org.springframework.stereotype.Service;
 public class UserProfileService implements
         UserService, UserDetailsService {
 
-    protected final UserRepository userRepository;
-    protected final PasswordEncoder passwordEncoder;
+    final UserRepository userRepository;
+    final PasswordEncoder passwordEncoder;
+    final UserMapper userMapper;
 
-    public UserProfileService(UserRepository userRepository,
-                              @Lazy PasswordEncoder passwordEncoder) {
+    public UserProfileService(UserRepository userRepository, @Lazy PasswordEncoder passwordEncoder,
+                              UserMapper userMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
     }
 
     /**
@@ -108,6 +112,19 @@ public class UserProfileService implements
         updateProfile(existingUser, user);
         User savedUser = saveUser(existingUser);
         return savedUser;
+    }
+
+    /**
+     * Обновляет существующего пользователя по логину.
+     *
+     * @param username имя пользователя для обновления.
+     * @param userDto  сущность пользователя с информацией об обновлении.
+     * @return обновленный пользователь.
+     */
+    public UserDto updateByUsername(String username, UserDto userDto) {
+        User existingUser = getUserByUsername(username);
+        updateProfile(existingUser, userDto);
+        return userMapper.userToUserDto(saveUser(existingUser));
     }
 
     /**
@@ -195,6 +212,11 @@ public class UserProfileService implements
         if (user.getPassword() != null)
             existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
         return existingUser;
+    }
+
+    protected UserDto updateProfile(User existingUser, UserDto userDto) {
+        User user = userMapper.userDtoToUser(userDto);
+        return userMapper.userToUserDto(updateProfile(existingUser, user));
     }
 
 }

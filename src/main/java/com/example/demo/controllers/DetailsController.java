@@ -2,7 +2,6 @@ package com.example.demo.controllers;
 
 import com.example.demo.dtos.UserDto;
 import com.example.demo.models.user.User;
-import com.example.demo.services.auth.AuthService;
 import com.example.demo.services.user.UserService;
 import com.example.demo.utils.UserMapper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,11 +23,8 @@ public class DetailsController {
     @Autowired
     private UserMapper userMapper;
 
-    @Autowired
-    private AuthService authService;
-
     /**
-     * Создание пользователе.
+     * Создание пользователя.
      *
      * @return DTO с информацией о пользователе
      */

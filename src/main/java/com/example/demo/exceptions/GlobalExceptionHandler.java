@@ -6,33 +6,32 @@ import com.example.demo.models.errors.AppError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
  * GlobalExceptionHandler — это глобальный обработчик исключений, который
  * перехватывает различные исключения в приложении и возвращает соответствующие
  * HTTP-ответы с информацией об ошибке и статусами.
  *
- * <p>Этот класс использует аннотацию {@link ControllerAdvice} для глобального
+ * <p>Этот класс использует аннотацию {@link RestControllerAdvice} для глобального
  * перехвата исключений, выбрасываемых в контроллерах. Каждое исключение
  * обрабатывается соответствующим методом, который возвращает объект
  * {@link ResponseEntity}, содержащий информацию об ошибке в виде
  * {@link AppError} и HTTP-статус.</p>
  */
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     /**
-     * Обрабатывает исключение {@link ResourceNotFoundException}, которое
-     * возникает, когда запрашиваемый ресурс не найден.
+     * Обрабатывает исключение {@link UserNotFoundException}, которое
+     * возникает, когда запрашиваемый пользователь не найден.
      *
-     * @param e исключение {@link ResourceNotFoundException}
+     * @param e исключение {@link UserNotFoundException}
      * @return ответ с кодом 404 NOT FOUND и сообщением об ошибке
      */
     @ExceptionHandler
-    public ResponseEntity<AppError> catchResourceNotFoundException
-    (ResourceNotFoundException e) {
+    public ResponseEntity<AppError> catchUserNotFoundException(UserNotFoundException e) {
         return new ResponseEntity<>(
                 new AppError(HttpStatus.NOT_FOUND.value(),
                         e.getMessage()), HttpStatus.NOT_FOUND);
@@ -46,8 +45,7 @@ public class GlobalExceptionHandler {
      * @return ответ с кодом 401 UNAUTHORIZED и сообщением об ошибке
      */
     @ExceptionHandler
-    public ResponseEntity<AppError> catchAuthException
-    (AuthException e) {
+    public ResponseEntity<AppError> catchAuthException (AuthException e) {
         return new ResponseEntity<>(
                 new AppError(HttpStatus.UNAUTHORIZED.value(),
                         e.getMessage()), HttpStatus.UNAUTHORIZED);
@@ -61,8 +59,7 @@ public class GlobalExceptionHandler {
      * @return ответ с кодом 401 UNAUTHORIZED и сообщением об ошибке
      */
     @ExceptionHandler
-    public ResponseEntity<AppError> catchJwtAuthException
-    (JwtAuthException e) {
+    public ResponseEntity<AppError> catchJwtAuthException (JwtAuthException e) {
         return new ResponseEntity<>(
                 new AppError(HttpStatus.UNAUTHORIZED.value(),
                         e.getMessage()), HttpStatus.UNAUTHORIZED);
@@ -77,8 +74,7 @@ public class GlobalExceptionHandler {
      * действия токена
      */
     @ExceptionHandler
-    public ResponseEntity<AppError> catchJwtExpiredException
-    (JwtExpiredException e) {
+    public ResponseEntity<AppError> catchJwtExpiredException (JwtExpiredException e) {
         return new ResponseEntity<>(
                 new AppError(HttpStatus.UNAUTHORIZED.value(),
                         e.getMessage()), HttpStatus.UNAUTHORIZED);
@@ -92,8 +88,7 @@ public class GlobalExceptionHandler {
      * @return ответ с кодом 404 NOT FOUND и сообщением об ошибке
      */
     @ExceptionHandler
-    public ResponseEntity<AppError> catchUserNotFoundException
-    (UsernameNotFoundException e) {
+    public ResponseEntity<AppError> catchUserNotFoundException (UsernameNotFoundException e) {
         return new ResponseEntity<>(
                 new AppError(HttpStatus.NOT_FOUND.value(),
                         e.getMessage()), HttpStatus.NOT_FOUND);
@@ -107,8 +102,7 @@ public class GlobalExceptionHandler {
      * @return ответ с кодом BAD_REQUEST и сообщением об ошибке
      */
     @ExceptionHandler
-    public ResponseEntity<AppError> UserAlreadyExistedException
-    (UserAlreadyExistedException e) {
+    public ResponseEntity<AppError> UserAlreadyExistedException (UserAlreadyExistedException e) {
         return new ResponseEntity<>(
                 new AppError(HttpStatus.BAD_REQUEST.value(),
                         e.getMessage()), HttpStatus.BAD_REQUEST);
@@ -122,12 +116,10 @@ public class GlobalExceptionHandler {
      * @return ответ с кодом FORBIDDEN и сообщением об ошибке
      */
     @ExceptionHandler
-    public ResponseEntity<AppError> PermissionException
-    (PermissionException e) {
+    public ResponseEntity<AppError> PermissionException (PermissionException e) {
         return new ResponseEntity<>(
                 new AppError(HttpStatus.FORBIDDEN.value(),
                         e.getMessage()), HttpStatus.FORBIDDEN);
     }
-
 
 }

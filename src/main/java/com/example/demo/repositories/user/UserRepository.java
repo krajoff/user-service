@@ -78,6 +78,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
      *
      * @param username имя пользователя
      */
-    void deleteByUsername(String username);
+    void deleteByUsername(String username) throws UsernameNotFoundException;
 }
 

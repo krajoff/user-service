@@ -1,4 +1,4 @@
-package com.example.demo.services.tokens.access;
+package com.example.demo.services.auth;
 
 import com.example.demo.exceptions.AuthException;
 import com.example.demo.payloads.requests.SignInRequest;
@@ -6,7 +6,7 @@ import com.example.demo.payloads.requests.SignUpRequest;
 import com.example.demo.models.role.Role;
 import com.example.demo.models.user.User;
 import com.example.demo.payloads.response.JwtAuthenticationResponse;
-import com.example.demo.payloads.response.TokenResponse;
+import com.example.demo.services.tokens.access.AccessTokenService;
 import com.example.demo.services.tokens.refresh.RefreshTokenService;
 import com.example.demo.services.user.UserService;
 import org.springframework.beans.factory.annotation.Qualifier;

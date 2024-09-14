@@ -1,5 +1,6 @@
 package com.example.demo.services.user;
 
+import com.example.demo.dtos.UserDto;
 import com.example.demo.models.user.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -46,7 +47,7 @@ public interface UserService {
     /**
      * Обновляет информацию о существующем пользователе по его идентификатору.
      *
-     * @param id уникальный идентификатор пользователя
+     * @param id   уникальный идентификатор пользователя
      * @param user обновленные данные сущности {@link User}
      * @return обновленная сущность {@link User}
      */
@@ -57,10 +58,21 @@ public interface UserService {
      * его имени пользователя (username).
      *
      * @param username имя пользователя
-     * @param user обновленные данные сущности {@link User}
+     * @param user     обновленные данные сущности {@link User}
      * @return обновленная сущность {@link User}
      */
     User updateByUsername(String username, User user);
+
+
+    /**
+     * Обновляет информацию о существующем пользователе по
+     * его имени пользователя (username).
+     *
+     * @param username имя пользователя
+     * @param userDto  обновленные данные сущности {@link UserDto}
+     * @return обновленная сущность {@link User}
+     */
+    UserDto updateByUsername(String username, UserDto userDto);
 
     /**
      * Удаляет пользователя по его уникальному идентификатору.

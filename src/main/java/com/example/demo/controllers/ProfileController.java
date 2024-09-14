@@ -2,13 +2,10 @@ package com.example.demo.controllers;
 
 import com.example.demo.dtos.UserDto;
 import com.example.demo.models.user.User;
-import com.example.demo.services.auth.AuthService;
+import com.example.demo.services.auth.CurrentUserService;
 import com.example.demo.services.user.UserService;
-import com.example.demo.utils.UserMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,19 +23,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class ProfileController {
 
-    private UserService userService;
+    private final UserService userService;
 
-    private UserMapper userMapper;
+    private final CurrentUserService currentUserService;
 
-    private AuthService authService;
-
-    public ProfileController(@Qualifier("userProfileService")
-                             UserService userService,
-                             UserMapper userMapper,
-                             AuthService authService) {
+    public ProfileController(@Qualifier("userProfileService") UserService userService,
+                             CurrentUserService currentUserService) {
         this.userService = userService;
-        this.userMapper = userMapper;
-        this.authService = authService;
+        this.currentUserService = currentUserService;
     }
 
     /**
@@ -49,8 +41,7 @@ public class ProfileController {
     @GetMapping()
     @Operation(summary = "Получение информации пользователя о самом себе")
     public UserDto getCurrentUser() {
-        User user = authService.getCurrentUser();
-        return userMapper.userToUserDto(user);
+        return currentUserService.getCurrentUserDto();
     }
 
     /**
@@ -62,27 +53,21 @@ public class ProfileController {
     @PutMapping()
     @Operation(summary = "Обновление информации пользователя о самом себе")
     public UserDto updateUser(@RequestBody UserDto userDto) {
-        User user = authService.getCurrentUser();
-        userService.updateByUsername(user.getUsername(),
-                userMapper.userDtoToUser(userDto));
-        return getCurrentUser();
+        User user = currentUserService.getCurrentUser();
+        return userService.updateByUsername(user.getUsername(), userDto);
     }
 
     /**
      * Удаляет текущего пользователя.
      *
      * @return HTTP-ответ с кодом состояния OK при успешном удалении
-     * или NOT_FOUND при возникновении ошибки
+     * или UserNotFoundException при возникновении ошибки
      */
     @DeleteMapping()
     @Operation(summary = "Удалить аккаунт")
     public ResponseEntity<?> deleteUser() {
-        try {
-            User user = authService.getCurrentUser();
-            userService.deleteUserByUsername(user.getUsername());
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        User user = currentUserService.getCurrentUser();
+        userService.deleteUserByUsername(user.getUsername());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

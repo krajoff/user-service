@@ -1,6 +1,9 @@
 package com.example.demo.services.auth;
 
+import com.example.demo.dtos.UserDto;
 import com.example.demo.models.user.User;
+import com.example.demo.utils.UserMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -13,7 +16,10 @@ import org.springframework.stereotype.Service;
  * </p>
  */
 @Service
-public class AuthService {
+@RequiredArgsConstructor
+public class CurrentUserService {
+
+    private UserMapper userMapper;
 
     /**
      * Получает текущего аутентифицированного пользователя.
@@ -37,5 +43,10 @@ public class AuthService {
                     "User not authenticated or invalid authentication");
         }
         return (User) authentication.getPrincipal();
+    }
+
+
+    public UserDto getCurrentUserDto(){
+        return userMapper.userToUserDto(getCurrentUser());
     }
 }

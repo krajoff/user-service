@@ -4,7 +4,7 @@ import com.example.demo.payloads.requests.SignInRequest;
 import com.example.demo.payloads.requests.SignUpRequest;
 import com.example.demo.payloads.response.JwtAuthenticationResponse;
 import com.example.demo.services.tokens.access.AccessTokenService;
-import com.example.demo.services.tokens.access.AuthenticationService;
+import com.example.demo.services.auth.AuthenticationService;
 import com.example.demo.services.tokens.refresh.RefreshTokenService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,22 +23,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AuthenticationController {
 
-    private final AccessTokenService accessTokenService;
-    private final RefreshTokenService refreshTokenService;
     private final AuthenticationService authenticationService;
 
     /**
      * Конструктор для создания экземпляра контроллера аутентификации.
      *
-     * @param accessTokenService    сервис для работы с аксес-токенами
-     * @param refreshTokenService   сервис для работы с рефреш-токенами
      * @param authenticationService сервис для аутентификации пользователей
      */
-    public AuthenticationController(AccessTokenService accessTokenService,
-                                    RefreshTokenService refreshTokenService,
-                                    AuthenticationService authenticationService) {
-        this.accessTokenService = accessTokenService;
-        this.refreshTokenService = refreshTokenService;
+    public AuthenticationController(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
     }
 

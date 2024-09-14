@@ -10,7 +10,7 @@ package com.example.demo.exceptions;
  * данных или другой объект,
  * не может быть найден в системе.
  */
-public class ResourceNotFoundException extends RuntimeException {
+public class UserNotFoundException extends RuntimeException {
 
     /**
      * Создает новое исключение ResourceNotFoundException с заданным сообщением.
@@ -18,7 +18,7 @@ public class ResourceNotFoundException extends RuntimeException {
      * @param message сообщение, которое описывает причину исключения,
      *                указывающее на то, что запрашиваемый ресурс не найден.
      */
-    public ResourceNotFoundException(String message) {
+    public UserNotFoundException(String message) {
         super(message);
     }
 }
