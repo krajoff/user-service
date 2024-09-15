@@ -53,7 +53,7 @@ public class AuthenticationService {
     }
 
     /**
-     * Регистрация пользователя (по умолчанию у всех роль ROLE_USER
+     * Регистрация пользователя (по умолчанию у всех роль ROLE_USER)
      *
      * @param request {@link SignUpRequest}
      * @return JWT-токен
@@ -100,4 +100,6 @@ public class AuthenticationService {
                     + ex.getMessage());
         }
     }
+
+
 }

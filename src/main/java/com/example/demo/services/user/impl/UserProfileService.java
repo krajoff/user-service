@@ -74,6 +74,17 @@ public class UserProfileService implements
     }
 
     /**
+     * Получает сущность пользователя UserDto по его имени пользователя.
+     *
+     * @param username имя пользователя.
+     * @return пользователь с указанным именем,
+     */
+    public UserDto getUserDtoByUsername(String username) {
+        return userMapper.userToUserDto(getUserByUsername(username));
+    }
+
+
+    /**
      * Получает пользователя по адресу электронной почты.
      *
      * @param email адрес электронной почты пользователя.

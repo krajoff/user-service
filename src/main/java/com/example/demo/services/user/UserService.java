@@ -37,6 +37,14 @@ public interface UserService {
     User getUserByUsername(String username);
 
     /**
+     * Получает пользователя по его имени пользователя (username).
+     *
+     * @param username имя пользователя
+     * @return {@link User} с указанным именем пользователя
+     */
+    UserDto getUserDtoByUsername(String username);
+
+    /**
      * Получает пользователя по его адресу электронной почты.
      *
      * @param email адрес электронной почты пользователя
