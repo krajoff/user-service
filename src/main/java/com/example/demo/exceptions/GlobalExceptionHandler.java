@@ -1,6 +1,7 @@
 package com.example.demo.exceptions;
 
 import com.example.demo.exceptions.auth.AuthException;
+import com.example.demo.exceptions.request.WrongRequestException;
 import com.example.demo.exceptions.auth.PermissionException;
 import com.example.demo.exceptions.jwt.JwtAuthException;
 import com.example.demo.exceptions.jwt.JwtExpiredException;
@@ -121,6 +122,20 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler
     public ResponseEntity<AppError> PermissionException (PermissionException e) {
+        return new ResponseEntity<>(
+                new AppError(HttpStatus.FORBIDDEN.value(),
+                        e.getMessage()), HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Обрабатывает исключение {@link WrongRequestException},
+     * которое возникает, если доступ закрыт.
+     *
+     * @param e исключение {@link WrongRequestException}
+     * @return ответ с кодом FORBIDDEN и сообщением об ошибке
+     */
+    @ExceptionHandler
+    public ResponseEntity<AppError> WrongRequestException (WrongRequestException e) {
         return new ResponseEntity<>(
                 new AppError(HttpStatus.FORBIDDEN.value(),
                         e.getMessage()), HttpStatus.FORBIDDEN);

@@ -62,6 +62,8 @@ public class SecurityConfig {
                         authorize -> authorize
                                 .requestMatchers("/v3/**", "/swagger-ui/**").permitAll()
                                 .requestMatchers("/api/v1/auth/**").permitAll()
+                                .requestMatchers("/api/v2/auth/**").permitAll()
+                                .requestMatchers("/api/v2/refresh/*").permitAll()
                                 .anyRequest().authenticated())
                 .cors(cors -> cors.configurationSource(request -> {
                     var corsConfiguration = new CorsConfiguration();
@@ -112,7 +114,7 @@ public class SecurityConfig {
      * @throws Exception в случае ошибок получения AuthenticationManager.
      */
     @Bean
-    public AuthenticationManager authenticationManager (AuthenticationConfiguration config) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 

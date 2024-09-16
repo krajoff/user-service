@@ -4,9 +4,7 @@ import com.example.demo.payloads.requests.RefreshTokenRequest;
 import com.example.demo.payloads.requests.SignInRequest;
 import com.example.demo.payloads.requests.SignUpRequest;
 import com.example.demo.services.cookies.CookieHttpOnlyService;
-import com.example.demo.services.tokens.refresh.RefreshTokenService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,16 +19,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class CurrentUserController {
     private final CookieHttpOnlyService cookieHttpOnlyService;
-    private final RefreshTokenService refreshTokenService;
 
     /**
      * Конструктор для создания экземпляра контроллера аутентификации.
      *
      * @param cookieHttpOnlyService сервис для аутентификации пользователей
      */
-    public CurrentUserController(CookieHttpOnlyService cookieHttpOnlyService, RefreshTokenService refreshTokenService) {
+    public CurrentUserController(CookieHttpOnlyService cookieHttpOnlyService) {
         this.cookieHttpOnlyService = cookieHttpOnlyService;
-        this.refreshTokenService = refreshTokenService;
     }
 
     /**
@@ -63,6 +59,16 @@ public class CurrentUserController {
         return cookieHttpOnlyService.signIn(request);
     }
 
+    /**
+     * Обновление рефреш-токена
+     * <p>
+     * При успешном выполнении запроса возвращает ResponseEntity
+     * с аксес- и рефреш-токеном
+     * </p>
+     *
+     * @param request объект запроса с рефреш-токеном
+     * @return ответ с токенами в виде кука httpOnly
+     */
     @PostMapping("/refreshtoken")
     public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest request) {
         return cookieHttpOnlyService.refreshToken(request);

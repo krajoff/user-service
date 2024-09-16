@@ -21,7 +21,7 @@ public class RefreshToken {
      * Уникальный идентификатор.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private long id;

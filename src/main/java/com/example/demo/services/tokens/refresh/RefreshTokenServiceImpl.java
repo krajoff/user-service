@@ -2,6 +2,7 @@ package com.example.demo.services.tokens.refresh;
 
 import com.example.demo.exceptions.jwt.RefreshTokenException;
 import com.example.demo.models.token.RefreshToken;
+import com.example.demo.models.user.User;
 import com.example.demo.repositories.token.RefreshTokenRepository;
 import com.example.demo.services.tokens.access.AccessTokenService;
 import com.example.demo.services.user.UserService;
@@ -60,4 +61,17 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         return create(username);
     }
 
+    @Transactional
+    public RefreshToken recreate(User user) {
+        refreshTokenRepository.deleteByUserId(user.getId());
+        return create(user.getUsername());
+    }
+
+    public void deleteAll() {
+        refreshTokenRepository.deleteAll();
+    }
+
+    public void deleteByUserId(Long id){
+        refreshTokenRepository.deleteByUserId(id);
+    }
 }
