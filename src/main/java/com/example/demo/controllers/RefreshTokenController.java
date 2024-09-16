@@ -19,7 +19,6 @@ public class RefreshTokenController {
     @DeleteMapping()
     public void deleteAll() {
         refreshTokenService.deleteAll();
-        System.out.println("Well done");
     }
 
 }

@@ -75,6 +75,18 @@ public class CookieHttpOnlyService {
                 .body("");
     }
 
+    public ResponseEntity<?> refreshToken(HttpServletRequest request) {
+        String token = getRefreshToken(request);
+
+        if (token != null && !token.isEmpty()) {
+            RefreshToken refreshToken = refreshTokenService.findByToken(token);
+            refreshToken = refreshTokenService.recreate(refreshToken);
+            String accessToken = accessTokenService.generateToken(refreshToken.getUser());
+            return getRefreshToken(accessToken, refreshToken.getToken());
+        }
+        return ResponseEntity.badRequest().body(new RefreshTokenException("Запрос на рефреш-токен пуст."));
+    }
+
     private String getCookieValueByName(HttpServletRequest request, String name) {
         Cookie cookie = WebUtils.getCookie(request, name);
         return cookie != null ? cookie.getValue() : null;
