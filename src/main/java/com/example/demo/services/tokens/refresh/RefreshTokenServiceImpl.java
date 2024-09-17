@@ -4,13 +4,10 @@ import com.example.demo.exceptions.jwt.RefreshTokenException;
 import com.example.demo.models.token.RefreshToken;
 import com.example.demo.models.user.User;
 import com.example.demo.repositories.token.RefreshTokenRepository;
-import com.example.demo.services.tokens.access.AccessTokenService;
-import com.example.demo.services.user.UserService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -18,36 +15,45 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Service
-@RequiredArgsConstructor
 @AllArgsConstructor
 public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Value("${REFRESH_TOKEN_EXPIRATION}")
     private long RefreshTokenExpiration;
-    private RefreshTokenRepository refreshTokenRepository;
-    private UserService userService;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
-    public RefreshTokenServiceImpl(RefreshTokenRepository refreshTokenRepository,
-                                   @Qualifier("userProfileService") UserService userService) {
+    public RefreshTokenServiceImpl(RefreshTokenRepository refreshTokenRepository) {
         this.refreshTokenRepository = refreshTokenRepository;
-        this.userService = userService;
     }
 
     public RefreshToken findByToken(String token) {
-        return refreshTokenRepository.findByToken(token)
+        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByToken(token);
+        if (refreshToken.isEmpty()) {
+            log.error("Рефреш-токен не найден в базе данных: " + token);
+        }
+        return refreshToken.orElseThrow(() -> new RefreshTokenException("Рефреш-токен не найден"));
+    }
+
+    public RefreshToken findByUserId(Long id) {
+        return refreshTokenRepository.findByUserId(id)
                 .orElseThrow(() -> new RefreshTokenException("Рефреш-токен не найден"));
     }
 
-    public RefreshToken create(String username) {
+    public RefreshToken create(User user) {
+        return save(generate(user));
+    }
+
+    public RefreshToken generate(User user) {
         RefreshToken token = new RefreshToken();
+        token.setUser(user);
+        return setExpiryAndToken(token);
+    }
 
-        token.setUser(userService.getUserByUsername(username));
-        token.setExpiration(new Date(System.currentTimeMillis() + RefreshTokenExpiration));
-        token.setToken(UUID.randomUUID().toString());
-
-        return refreshTokenRepository.save(token);
+    private RefreshToken save(RefreshToken refreshToken) {
+        return refreshTokenRepository.save(refreshToken);
     }
 
     public boolean isValidExpiration(RefreshToken refreshToken) {
@@ -55,23 +61,32 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     @Transactional
-    public RefreshToken recreate(RefreshToken refreshToken) {
-        refreshTokenRepository.delete(refreshToken);
-        String username = refreshToken.getUser().getUsername();
-        return create(username);
+    public RefreshToken update(String token) {
+        RefreshToken existingToken = findByToken(token);
+        setExpiryAndToken(existingToken);
+        return save(existingToken);
     }
 
     @Transactional
-    public RefreshToken recreate(User user) {
-        refreshTokenRepository.deleteByUserId(user.getId());
-        return create(user.getUsername());
+    public RefreshToken update(User user) {
+        RefreshToken existingToken = findByUserId(user.getId());
+        setExpiryAndToken(existingToken);
+        return save(existingToken);
     }
 
+    private RefreshToken setExpiryAndToken(RefreshToken refreshToken) {
+        refreshToken.setExpiration(new Date(System.currentTimeMillis() + RefreshTokenExpiration));
+        refreshToken.setToken(UUID.randomUUID().toString());
+        return refreshToken;
+    }
+
+    @Transactional
     public void deleteAll() {
         refreshTokenRepository.deleteAll();
     }
 
-    public void deleteByUserId(Long id){
+    @Transactional
+    public void deleteByUserId(Long id) {
         refreshTokenRepository.deleteByUserId(id);
     }
 }

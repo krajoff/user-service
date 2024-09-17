@@ -1,13 +1,9 @@
 package com.example.demo.services.cookies;
 
-import com.example.demo.exceptions.jwt.RefreshTokenException;
-import com.example.demo.models.token.RefreshToken;
 import com.example.demo.payloads.requests.RefreshTokenRequest;
 import com.example.demo.payloads.requests.SignInRequest;
 import com.example.demo.payloads.requests.SignUpRequest;
 import com.example.demo.services.auth.AuthenticationService;
-import com.example.demo.services.tokens.access.AccessTokenService;
-import com.example.demo.services.tokens.refresh.RefreshTokenService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
@@ -19,45 +15,44 @@ import org.springframework.web.util.WebUtils;
 @Service
 public class CookieHttpOnlyService {
 
-    private final String accessCookieName = "accessCookie";
-    private final String refreshCookieName = "refreshCookie";
+    private final String accessCookieName = "accessToken";
+    private final String refreshCookieName = "refreshToken";
     private final AuthenticationService authenticationService;
-    private final RefreshTokenService refreshTokenService;
-    private final AccessTokenService accessTokenService;
 
-
-    public CookieHttpOnlyService(AuthenticationService authenticationService,
-                                 AccessTokenService accessTokenService,
-                                 RefreshTokenService refreshTokenService) {
+    public CookieHttpOnlyService(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
-        this.accessTokenService = accessTokenService;
-        this.refreshTokenService = refreshTokenService;
     }
 
     public ResponseEntity<?> signUp(SignUpRequest request) {
         var authResponse = authenticationService.signUp(request);
-        return getRefreshToken(authResponse.getAccessToken(),
-                authResponse.getRefreshToken());
+        return getTokens(authResponse.getAccessToken(), authResponse.getRefreshToken());
     }
 
 
     public ResponseEntity<?> signIn(SignInRequest request) {
         var authResponse = authenticationService.signIn(request);
-        return getRefreshToken(authResponse.getAccessToken(),
-                authResponse.getRefreshToken());
+        return getTokens(authResponse.getAccessToken(), authResponse.getRefreshToken());
     }
 
-    public ResponseEntity<?> refreshToken(RefreshTokenRequest request) {
-        String token = request.getRefreshToken();
-
-        if (token != null && !token.isEmpty()) {
-            RefreshToken refreshToken = refreshTokenService.findByToken(token);
-            refreshToken = refreshTokenService.recreate(refreshToken);
-            String accessToken = accessTokenService.generateToken(refreshToken.getUser());
-            return getRefreshToken(accessToken, refreshToken.getToken());
+    public ResponseEntity<?> refreshToken(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        System.out.println("--->" + cookies);
+        String token = null;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                System.out.println("--->" + cookie.getName());
+                // Проверяем имя cookie
+                if ("refreshToken".equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    // Логика обработки токена
+                }
+            }
         }
 
-        return ResponseEntity.badRequest().body(new RefreshTokenException("Запрос на рефреш-токен пуст."));
+        //String token = getRefreshToken(request);
+        RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest(token);
+        var authResponse = authenticationService.refreshToken(refreshTokenRequest);
+        return getTokens(authResponse.getAccessToken(), authResponse.getRefreshToken());
     }
 
     public String getAccessToken(HttpServletRequest request) {
@@ -68,23 +63,11 @@ public class CookieHttpOnlyService {
         return getCookieValueByName(request, refreshCookieName);
     }
 
-    private ResponseEntity<?> getRefreshToken(String accessToken, String refreshToken) {
+    private ResponseEntity<?> getTokens(String accessToken, String refreshToken) {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, generateAccessCookie(accessToken).toString())
                 .header(HttpHeaders.SET_COOKIE, generateRefreshCookie(refreshToken).toString())
                 .body("");
-    }
-
-    public ResponseEntity<?> refreshToken(HttpServletRequest request) {
-        String token = getRefreshToken(request);
-
-        if (token != null && !token.isEmpty()) {
-            RefreshToken refreshToken = refreshTokenService.findByToken(token);
-            refreshToken = refreshTokenService.recreate(refreshToken);
-            String accessToken = accessTokenService.generateToken(refreshToken.getUser());
-            return getRefreshToken(accessToken, refreshToken.getToken());
-        }
-        return ResponseEntity.badRequest().body(new RefreshTokenException("Запрос на рефреш-токен пуст."));
     }
 
     private String getCookieValueByName(HttpServletRequest request, String name) {
@@ -98,10 +81,10 @@ public class CookieHttpOnlyService {
     }
 
     private ResponseCookie generateAccessCookie(String accessToken) {
-        return generateCookie(accessCookieName, accessToken, "/api");
+        return generateCookie(accessCookieName, accessToken, "/api/auth/v2/access-token/");
     }
 
     private ResponseCookie generateRefreshCookie(String refreshToken) {
-        return generateCookie(refreshCookieName, refreshToken, "/api/refresh/");
+        return generateCookie(refreshCookieName, refreshToken, "/api/auth/v2/refresh-token/");
     }
 }

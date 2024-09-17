@@ -2,6 +2,8 @@ package com.example.demo.services.auth;
 
 import com.example.demo.exceptions.auth.AuthException;
 import com.example.demo.exceptions.request.WrongRequestException;
+import com.example.demo.models.token.RefreshToken;
+import com.example.demo.payloads.requests.RefreshTokenRequest;
 import com.example.demo.payloads.requests.SignInRequest;
 import com.example.demo.payloads.requests.SignUpRequest;
 import com.example.demo.models.role.Role;
@@ -57,7 +59,7 @@ public class AuthenticationService {
      * Регистрация пользователя (по умолчанию у всех роль ROLE_USER)
      *
      * @param request {@link SignUpRequest}
-     * @return JWT-токен
+     * @return Рефреш- и аксес-токены
      */
     public JwtAuthenticationResponse signUp(SignUpRequest request) {
         try {
@@ -71,7 +73,7 @@ public class AuthenticationService {
             userService.createUser(user);
 
             var accessToken = accessTokenService.generateToken(user);
-            var refreshToken = refreshTokenService.create(user.getUsername()).getToken();
+            var refreshToken = refreshTokenService.create(user).getToken();
             return new JwtAuthenticationResponse(accessToken, refreshToken);
 
         } catch (AuthenticationException ex) {
@@ -86,7 +88,7 @@ public class AuthenticationService {
      * Аутентификация пользователя
      *
      * @param request {@link SignInRequest}
-     * @return token
+     * @return Рефреш- и аксес-токены
      */
     public JwtAuthenticationResponse signIn(SignInRequest request) {
         try {
@@ -99,7 +101,7 @@ public class AuthenticationService {
 
             var user = userService.getUserByUsername(request.getUsername());
             var accessToken = accessTokenService.generateToken(user);
-            var refreshToken = refreshTokenService.recreate(user).getToken();
+            var refreshToken = refreshTokenService.update(user).getToken();
             return new JwtAuthenticationResponse(accessToken, refreshToken);
         } catch (AuthenticationException ex) {
             throw new AuthException("Ошибка аутентификации пользователя. " + ex.getMessage());
@@ -109,5 +111,24 @@ public class AuthenticationService {
         }
     }
 
+    /**
+     * Обновление рефреш-токена
+     *
+     * @param request {@link RefreshTokenRequest}
+     * @return Рефреш- и аксес-токены
+     */
+    public JwtAuthenticationResponse refreshToken(RefreshTokenRequest request) {
+        System.out.println(request);
+        try {
+            var refreshToken = refreshTokenService.update(request.getRefreshToken());
+            var accessToken = accessTokenService.generateToken(refreshToken.getUser());
+            return new JwtAuthenticationResponse(accessToken, refreshToken.getToken());
+        } catch (AuthenticationException ex) {
+            throw new AuthException("Ошибка аутентификации пользователя. " + ex.getMessage());
+        } catch (NullPointerException ex) {
+            throw new WrongRequestException("Ошибка: некорректные данные, " +
+                    "проверьте поля запроса. " + ex.getMessage());
+        }
+    }
 
 }

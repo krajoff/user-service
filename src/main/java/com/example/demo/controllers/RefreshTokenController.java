@@ -2,7 +2,6 @@ package com.example.demo.controllers;
 
 import com.example.demo.services.tokens.refresh.RefreshTokenService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.mapstruct.Mapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 

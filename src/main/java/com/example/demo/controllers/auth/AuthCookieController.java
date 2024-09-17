@@ -1,4 +1,4 @@
-package com.example.demo.controllers;
+package com.example.demo.controllers.auth;
 
 import com.example.demo.payloads.requests.RefreshTokenRequest;
 import com.example.demo.payloads.requests.SignInRequest;
@@ -10,15 +10,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Контроллер, предоставляющий API для управления информацией пользователя.
- * Этот контроллер предоставляет методы для получения, обновления и удаления
- * информации о текущем пользователе.
+ * Контроллер, предоставляющий API для аутентификации пользователей.
+ * Этот контроллер отвечает за регистрацию новых пользователей и
+ * аутентификацию существующих.
  */
-@Tag(name = "Регистрация и аутентификация",
-        description = "API для регистрации и аутентификации httpOnly")
+@Tag(name = "Регистрация, аутентификация и обновление рефреш-токена",
+        description = "API для регистрации и аутентификации с httpOnly")
 @RequestMapping("/api/v2/auth")
 @RestController
-public class CurrentUserController {
+public class AuthCookieController {
     private final CookieHttpOnlyService cookieHttpOnlyService;
 
     /**
@@ -26,7 +26,7 @@ public class CurrentUserController {
      *
      * @param cookieHttpOnlyService сервис для аутентификации пользователей
      */
-    public CurrentUserController(CookieHttpOnlyService cookieHttpOnlyService) {
+    public AuthCookieController(CookieHttpOnlyService cookieHttpOnlyService) {
         this.cookieHttpOnlyService = cookieHttpOnlyService;
     }
 

@@ -1,4 +1,4 @@
-package com.example.demo.controllers;
+package com.example.demo.controllers.user;
 
 import com.example.demo.dtos.UserDto;
 import com.example.demo.models.user.User;

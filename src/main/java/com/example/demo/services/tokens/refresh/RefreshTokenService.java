@@ -3,18 +3,20 @@ package com.example.demo.services.tokens.refresh;
 import com.example.demo.models.token.RefreshToken;
 import com.example.demo.models.user.User;
 
-import java.util.Optional;
-
 public interface RefreshTokenService {
     RefreshToken findByToken(String token);
 
-    RefreshToken create(String username);
+    RefreshToken findByUserId(Long id);
 
-    boolean isValidExpiration(RefreshToken token);
+    RefreshToken create(User user);
 
-    RefreshToken recreate(RefreshToken refreshToken);
+    RefreshToken generate(User user);
 
-    RefreshToken recreate(User user);
+    boolean isValidExpiration(RefreshToken refreshToken);
+
+    RefreshToken update(String token);
+
+    RefreshToken update(User user);
 
     void deleteAll();
 
