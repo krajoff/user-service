@@ -2,7 +2,6 @@ package com.example.demo.services.auth;
 
 import com.example.demo.exceptions.auth.AuthException;
 import com.example.demo.exceptions.request.WrongRequestException;
-import com.example.demo.models.token.RefreshToken;
 import com.example.demo.payloads.requests.RefreshTokenRequest;
 import com.example.demo.payloads.requests.SignInRequest;
 import com.example.demo.payloads.requests.SignUpRequest;
@@ -118,7 +117,6 @@ public class AuthenticationService {
      * @return Рефреш- и аксес-токены
      */
     public JwtAuthenticationResponse refreshToken(RefreshTokenRequest request) {
-        System.out.println(request);
         try {
             var refreshToken = refreshTokenService.update(request.getRefreshToken());
             var accessToken = accessTokenService.generateToken(refreshToken.getUser());

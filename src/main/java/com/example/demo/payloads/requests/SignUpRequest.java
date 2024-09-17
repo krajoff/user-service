@@ -15,7 +15,7 @@ import lombok.Data;
  * требуемому формату и длине.
  */
 @Data
-@Schema(description = "Sign up request")
+@Schema(description = "Запрос на регистрацию")
 public class SignUpRequest {
 
     @JsonProperty("username")

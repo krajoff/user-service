@@ -15,13 +15,13 @@ import lombok.*;
  */
 @Setter
 @Getter
-@Schema(description = "Sign in request")
+@Schema(description = "Запрос на аутентификацию")
 public class SignInRequest {
 
     @Schema(description = "username", example = "Ivanov_LS")
     @Size(min = 5, max = 30,
             message = "Minimum username length is 5 letters, maximum is 30")
-    @NotBlank(message = "Username can not be blank")
+    @NotBlank(message = "Имя пользователя не может быть пустым")
     private String username;
 
     @Schema(description = "password")

@@ -29,7 +29,7 @@ public class RefreshToken {
     /**
      * Пользователь связанный с токеном.
      */
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
