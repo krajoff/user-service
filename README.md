@@ -1,7 +1,7 @@
-# User Service
+# User Service Based On Access And Refresh Tokens 
 
-User Service — это приложение на основе Spring Boot,
-предназначенное для управления пользователем. Для аутентификации выбран JWT,
+User Service — приложение на основе Spring Boot,
+предназначенное для управления пользователем. Для аутентификации выбраны аксес- и рефреш-токены,
 обладающий стандартной структурой и простотой использования.
 
 <details open>
@@ -57,7 +57,7 @@ Endpoint: ``POST localhost:8080/api/v1/auth/login``
 }
 ```
 * Получение данных о пользователе.
-Endpoint: ``GET localhost:8080/api/v1/user/nikolay_vp``
+Endpoint: ``GET localhost:8080/api/v1/user/petrov_pp``
 
 ```json
 {

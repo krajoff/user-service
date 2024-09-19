@@ -63,6 +63,7 @@ public class SecurityConfig {
                                 .requestMatchers("/v3/**", "/swagger-ui/**").permitAll()
                                 .requestMatchers("/api/v1/auth/**").permitAll()
                                 .requestMatchers("/api/v2/auth/**").permitAll()
+                                .requestMatchers("/api/v1/test/anybody").permitAll()
                                 .requestMatchers("/api/v2/refresh/*").permitAll()
                                 .anyRequest().authenticated())
                 .cors(cors -> cors.configurationSource(request -> {

@@ -1,6 +1,5 @@
 package com.example.demo.controllers.auth;
 
-import com.example.demo.payloads.requests.RefreshTokenRequest;
 import com.example.demo.payloads.requests.SignInRequest;
 import com.example.demo.payloads.requests.SignUpRequest;
 import com.example.demo.services.cookies.CookieHttpOnlyService;

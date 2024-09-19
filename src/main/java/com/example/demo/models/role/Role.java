@@ -11,10 +11,10 @@ import org.springframework.security.core.GrantedAuthority;
 @RequiredArgsConstructor
 public enum Role implements GrantedAuthority {
 
-    ADMIN("ROLE_ADMIN"),
-    MODERATOR("ROLE_MODERATOR"),
-    USER("ROLE_USER"),
-    DELETED("DELETED_ACCOUNT");
+    ROLE_ADMIN("ROLE_ADMIN"),
+    ROLE_MODERATOR("ROLE_MODERATOR"),
+    ROLE_USER("ROLE_USER"),
+    DELETED_ACCOUNT("DELETED_ACCOUNT");
 
     private final String authority;
 

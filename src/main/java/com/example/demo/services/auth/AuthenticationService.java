@@ -66,7 +66,7 @@ public class AuthenticationService {
                     .username(request.getUsername().toLowerCase())
                     .email(request.getEmail().toLowerCase())
                     .password(passwordEncoder.encode(request.getPassword()))
-                    .role(Role.USER)
+                    .role(Role.ROLE_USER)
                     .build();
 
             userService.createUser(user);
@@ -97,7 +97,6 @@ public class AuthenticationService {
                             request.getUsername(),
                             request.getPassword()
                     ));
-
             var user = userService.getUserByUsername(request.getUsername());
             var accessToken = accessTokenService.generateToken(user);
             var refreshToken = refreshTokenService.update(user).getToken();

@@ -35,21 +35,7 @@ public class CookieHttpOnlyService {
     }
 
     public ResponseEntity<?> refreshToken(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        System.out.println("--->" + cookies);
-        String token = null;
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                System.out.println("--->" + cookie.getName());
-                // Проверяем имя cookie
-                if ("refreshToken".equals(cookie.getName())) {
-                    token = cookie.getValue();
-                    // Логика обработки токена
-                }
-            }
-        }
-
-        //String token = getRefreshToken(request);
+        String token = getRefreshToken(request);
         RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest(token);
         var authResponse = authenticationService.refreshToken(refreshTokenRequest);
         return getTokens(authResponse.getAccessToken(), authResponse.getRefreshToken());

@@ -69,9 +69,9 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Transactional
     public RefreshToken update(User user) {
-        RefreshToken existingToken = findByUserId(user.getId());
-        setExpiryAndToken(existingToken);
-        return save(existingToken);
+        Optional<RefreshToken> existingToken = refreshTokenRepository.findByUserId(user.getId());
+        return existingToken.map(refreshToken ->
+                save(setExpiryAndToken(refreshToken))).orElseGet(() -> save(generate(user)));
     }
 
     private RefreshToken setExpiryAndToken(RefreshToken refreshToken) {

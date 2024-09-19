@@ -1,5 +1,6 @@
 package com.example.demo.dtos;
 
+import com.example.demo.models.role.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -28,6 +29,9 @@ public class UserDto {
 
     @Schema(description = "Дата рождения пользователя", example = "1985-5-5")
     private LocalDate birthDate;
+
+    @Schema(description = "Права доступа к ресурсам", example = "USER")
+    private Role role;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Schema(description = "Пароль пользователя")
